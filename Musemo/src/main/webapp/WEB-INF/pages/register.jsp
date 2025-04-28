@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +11,9 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <link rel="stylesheet" type="text/css"
 	href="${contextPath}/css/register.css" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
 </head>
 
 <body
@@ -42,8 +46,8 @@
 				</div>
 			</div>
 
-			<form action="${contextPath}/register" method="post"
-				enctype="multipart/form-data">
+			<form id="registerForm" action="${contextPath}/register"
+				method="post" enctype="multipart/form-data">
 
 				<div class="form-row">
 					<div class="form-group">
@@ -60,11 +64,17 @@
 				</div>
 
 				<div class="form-row">
-					<div class="form-group">
+					<div class="form-group" style="position: relative;">
 						<label class="form-label" for="password">Password</label> <input
 							type="password" id="password" name="password" class="form-input"
 							placeholder="Create a password" value="${password}" required>
+						<button type="button" class="password-toggle"
+							onclick="togglePassword()"
+							style="position: absolute; right: 10px; top: 38px; background: none; border: none; cursor: pointer;">
+							<i id="toggleIcon" class="fa-solid fa-eye"></i>
+						</button>
 					</div>
+
 					<div class="form-group">
 						<label class="form-label" for="gender">Gender</label> <select
 							name="gender" id="gender" class="form-select">
@@ -115,12 +125,30 @@
 
 	</div>
 	<script>
-  		document.getElementById("registerForm").onsubmit = function(e) {
-    		if (!document.getElementById("privacy").checked) {
-     			e.preventDefault();
-      			alert("You must accept the Privacy Policy and Terms of Service to continue.");
-    		}
-  		};
+		// Form privacy checkbox validation
+		document.getElementById("registerForm").onsubmit = function(e) {
+			if (!document.getElementById("privacy").checked) {
+				e.preventDefault();
+				alert("You must accept the Privacy Policy and Terms of Service to continue.");
+			}
+		};
+
+		// Toggle password show/hide
+		function togglePassword() {
+			const passwordField = document.getElementById("password");
+			const toggleIcon = document.getElementById("toggleIcon");
+
+			if (passwordField.type === "password") {
+				passwordField.type = "text";
+				toggleIcon.classList.remove('fa-eye');
+				toggleIcon.classList.add('fa-eye-slash');
+			} else {
+				passwordField.type = "password";
+				toggleIcon.classList.remove('fa-eye-slash');
+				toggleIcon.classList.add('fa-eye');
+			}
+		}
 	</script>
+
 </body>
 </html>

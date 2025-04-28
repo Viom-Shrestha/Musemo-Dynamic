@@ -5,6 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 
 import com.musemo.model.UserModel;
@@ -15,7 +17,7 @@ import com.musemo.util.SessionUtil;
 /**
  * @author Viom Shrestha
  */
-@WebServlet("/login")
+@WebServlet(asyncSupported = true, urlPatterns = { "/login","/"})
 public class LoginController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private final LoginService loginService;
@@ -41,26 +43,31 @@ public class LoginController extends HttpServlet {
 	 * @throws IOException      if an I/O error occurs
 	 */
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String username = req.getParameter("username");
-		String password = req.getParameter("password");
+	    String username = req.getParameter("username");
+	    String password = req.getParameter("password");
 
-		UserModel userModel = new UserModel(username, password);
-		String role = loginService.loginUser(userModel);
+	    UserModel userModel = new UserModel(username, password);
+	    String role = loginService.loginUser(userModel);
 
-		if (role == null) {
-		    handleLoginFailure(req, resp, null); // DB or connection error
-		} else if (role.equals("invalid")) {
-		    handleLoginFailure(req, resp, false); // wrong username or password
-		} else {
-		    SessionUtil.setAttribute(req, "username", username);  
-		    CookieUtil.addCookie(resp, "role", role, 5 * 30); 
+	    if (role == null) {
+	        handleLoginFailure(req, resp, null); // DB or connection error
+	        return; // Important: Exit after handling failure
+	    } else if (role.equals("invalid")) {
+	        handleLoginFailure(req, resp, false); // wrong username or password
+	        return; // Important: Exit after handling failure
+	    } else {
+	        SessionUtil.setAttribute(req, "username", username);
+	        CookieUtil.addCookie(resp, "role", role, 5 * 30);
 
-		    if (role.equalsIgnoreCase("admin")) {
-		        resp.sendRedirect(req.getContextPath() + "/dashboard");
-		    } else {
-		        resp.sendRedirect(req.getContextPath() + "/home");
-		    }
-		}    
+	        if (role.equalsIgnoreCase("Admin")) {
+	            resp.sendRedirect(req.getContextPath() + "/dashboard");
+	        } else {
+	            HttpSession session = req.getSession();
+	            SessionUtil.setAttribute(req, "username", username);
+	            System.out.println("Login successful for user: " + username + ", Session ID: " + session.getId());
+	            resp.sendRedirect(req.getContextPath() + "/home");
+	        }
+	    }
 	}
 
 	/**

@@ -10,6 +10,8 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <link rel="stylesheet" type="text/css"
 	href="${contextPath}/css/login.css" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body
 	style="background-image: url('${contextPath}/resources/images/login_bg.jpg');">
@@ -40,11 +42,17 @@
 						placeholder="Enter your username">
 				</div>
 
-				<div class="form-group">
+				<div class="form-group" style="position: relative;">
 					<label class="form-label">Password:</label> <input type="password"
-						name="password" class="form-input"
+						id="password" name="password" class="form-input"
 						placeholder="Enter your password">
+					<button type="button" class="password-toggle"
+						onclick="togglePassword()"
+						style="position: absolute; right: 10px; top: 40px; background: none; border: none; cursor: pointer;">
+						<i id="toggleIcon" class="fa-solid fa-eye"></i>
+					</button>
 				</div>
+
 
 				<button type="submit" class="login-btn">Login</button>
 
@@ -60,4 +68,23 @@
 
 	</div>
 </body>
+
+<script>
+	// Toggle password show/hide
+	function togglePassword() {
+		const passwordField = document.getElementById("password");
+		const toggleIcon = document.getElementById("toggleIcon");
+
+		if (passwordField.type === "password") {
+			passwordField.type = "text";
+			toggleIcon.classList.remove('fa-eye');
+			toggleIcon.classList.add('fa-eye-slash');
+		} else {
+			passwordField.type = "password";
+			toggleIcon.classList.remove('fa-eye-slash');
+			toggleIcon.classList.add('fa-eye');
+		}
+	}
+</script>
+
 </html>

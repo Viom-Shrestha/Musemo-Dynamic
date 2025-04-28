@@ -6,10 +6,18 @@
 
 header {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Puts space between logo and navigation */
     align-items: center;
     padding: 15px 30px;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Allows wrapping for smaller screens */
+}
+
+.logo {
+    order: 1; /* Ensures logo appears first (on the left in LTR) */
+}
+
+.logo a {
+    display: inline-block; /* Makes the anchor behave like a block for consistent sizing */
 }
 
 .logo img {
@@ -17,12 +25,17 @@ header {
     width: auto;
 }
 
+nav {
+    order: 2; /* Ensures navigation appears after the logo */
+    margin-left: auto; /* Pushes the entire nav to the right */
+}
+
 .main-nav {
     display: flex;
     list-style: none;
     gap: 25px;
-    margin: 0;
     padding: 0;
+    margin: 0; /* Reset default ul margin */
 }
 
 .main-nav li {
@@ -37,6 +50,8 @@ header {
     background: none;
     border: none;
     cursor: pointer;
+    display: block; /* Make the entire link clickable */
+    padding: 8px 0; /* Add some vertical padding for better touch targets */
 }
 
 .main-nav a:hover, .nav-button:hover {
@@ -59,19 +74,19 @@ header {
     display: inline;
 }
 
-.user-icon i {
-    font-size: 28px;
-    color: #ffffff;
-    margin-left: 15px;
-}
-
 .user-icon {
     font-size: 28px;
     color: #ffffff;
-    margin-left: 15px;
+    margin-left: 25px; /* Add space between last link and user icon */
     text-decoration: none;
     display: flex;
     align-items: center;
+    order: 3; /* Ensure user icon is on the far right */
+}
+
+.user-icon i {
+    font-size: 28px;
+    color: inherit; /* Inherit color from the anchor */
 }
 
 .user-icon:hover {
@@ -86,14 +101,23 @@ header {
         align-items: flex-start;
     }
 
+    nav {
+        margin-left: 0; /* Reset margin for stacked layout */
+        margin-top: 10px;
+        width: 100%; /* Make nav take full width */
+        order: 3;
+    }
+
     .main-nav {
         flex-direction: column;
         gap: 10px;
-        margin-top: 10px;
+        width: 100%; /* Make links take full width */
     }
 
     .user-icon {
         align-self: flex-end;
         margin-top: 10px;
+        margin-left: 0;
+        order: 2;
     }
 }

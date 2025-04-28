@@ -12,28 +12,6 @@
         </ul>
     </div>
 
-    <div class="footer-column">
-        <h3>Information</h3>
-        <ul>
-            <li><a href="hours.jsp">Hours and Admission</a></li>
-            <li><a href="directions.jsp">Directions and Parking</a></li>
-            <li><a href="accessibility.jsp">Accessibility</a></li>
-            <li><a href="dining.jsp">Dining Options</a></li>
-            <li><a href="shop.jsp">Museum Shop</a></li>
-        </ul>
-    </div>
-
-    <div class="footer-column">
-        <h3>Programs</h3>
-        <ul>
-            <li><a href="tours.jsp">Guided Tours</a></li>
-            <li><a href="lectures.jsp">Lectures and Talks</a></li>
-            <li><a href="workshops.jsp">Workshops</a></li>
-            <li><a href="educational.jsp">Educational Programs</a></li>
-            <li><a href="community.jsp">Community Outreach</a></li>
-        </ul>
-    </div>
-
     <div class="footer-column contact-us">
         <h3>Contact Us</h3>
         <ul>

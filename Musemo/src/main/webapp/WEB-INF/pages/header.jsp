@@ -1,18 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ page import="jakarta.servlet.http.HttpSession"%>
-<%@ page import="jakarta.servlet.http.HttpServletRequest"%>
+<%@ page import="com.musemo.util.SessionUtil"%>
 
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <%
-HttpSession userSession = request.getSession(false);
-String currentUser = (String) (userSession != null ? userSession.getAttribute("username") : null);
+String currentUser = (String) SessionUtil.getAttribute(request, "username");
 pageContext.setAttribute("currentUser", currentUser);
 %>
 
-<c:set var="contextPath" value="${pageContext.request.contextPath}" />
-
-<link rel="stylesheet" href="${contextPath}/resources/css/header.css">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
@@ -53,16 +49,15 @@ pageContext.setAttribute("currentUser", currentUser);
 
 		<c:choose>
 			<c:when test="${not empty currentUser}">
-				<a href="${contextPath}/user/profile" class="user-icon"
+				<a href="${contextPath}/profile" class="user-icon"
 					title="View Profile"> <i class="fas fa-user-circle"></i>
 				</a>
 			</c:when>
 			<c:otherwise>
-				<div class="user-icon" title="Guest">
-					<i class="fas fa-user-circle"></i>
-				</div>
+				<a href="${contextPath}/login" class="user-icon"
+					title="Login / Register"> <i class="fas fa-user-circle"></i>
+				</a>
 			</c:otherwise>
 		</c:choose>
-
 	</header>
 </div>

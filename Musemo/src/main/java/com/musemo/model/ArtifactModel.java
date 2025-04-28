@@ -29,6 +29,19 @@ public class ArtifactModel {
 		this.artifactImage = artifactImage;
 	}
 
+	public ArtifactModel(String artifactName, String artifactType, String creatorName, String timePeriod, String origin,
+			String condition, String description, String artifactImage) {
+		super();
+		this.artifactName = artifactName;
+		this.artifactType = artifactType;
+		this.creatorName = creatorName;
+		this.timePeriod = timePeriod;
+		this.origin = origin;
+		this.condition = condition;
+		this.description = description;
+		this.artifactImage = artifactImage;
+	}
+
 	public int getArtifactID() {
 		return artifactID;
 	}
