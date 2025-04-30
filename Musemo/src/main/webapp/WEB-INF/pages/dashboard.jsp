@@ -19,27 +19,31 @@
 	<div class="sidebar">
 		<div class="logo-container">
 			<div class="logo">
-				<img src="${contextPath}/resources/images/system/admin_logo.png"
+				<img src="${contextPath}/resources/images/icons/admin_icon.png"
 					alt="Admin Logo" style="width: 40px; height: 40px;">
 			</div>
 			<div class="brand-name">MUSEMO Admin</div>
 		</div>
 
-		<div class="menu-item active">
-			<i class="fas fa-th-large"></i> <span>Dashboard</span>
-		</div>
+		 <a href="${contextPath}/dashboard" class="menu-item active">
+        <i class="fas fa-th-large"></i> <span>Dashboard</span>
+    </a>
 
-		<div class="menu-item">
-			<i class="fas fa-users"></i> <span>User Management</span>
-		</div>
+    <a href="${contextPath}/userManagement" class="menu-item">
+        <i class="fas fa-users"></i> <span>User Management</span>
+    </a>
 
-		<div class="menu-item">
-			<i class="fas fa-archive"></i> <span>Artifact Management</span>
-		</div>
+    <a href="${contextPath}/artifactManagement" class="menu-item">
+        <i class="fas fa-archive"></i> <span>Artifact Management</span>
+    </a>
 
-		<div class="menu-item">
-			<i class="fas fa-calendar-alt"></i> <span>Exhibitions</span>
-		</div>
+    <a href="${contextPath}/exhibitionManagement" class="menu-item">
+        <i class="fas fa-calendar-alt"></i> <span>Exhibitions And Bookings</span>
+    </a>
+
+    <a href="${contextPath}/adminProfile" class="menu-item">
+        <i class="fas fa-user-cog"></i> <span>Admin Profile</span>
+    </a>
 	</div>
 
 	<div class="main-content">

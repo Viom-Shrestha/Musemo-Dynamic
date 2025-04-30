@@ -9,15 +9,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>User Profile - MUSEMO</title>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
-<link rel="stylesheet" href="${contextPath}/css/profile.css">
+<link rel="stylesheet" href="${contextPath}/css/profile.css" />
 <link rel="stylesheet" type="text/css"
 	href="${contextPath}/css/header.css" />
 <link rel="stylesheet" type="text/css"
 	href="${contextPath}/css/footer.css" />
 </head>
-<jsp:include page="header.jsp" />
-<body>
 
+<body>
+	<jsp:include page="header.jsp" />
 	<div class="profile-container">
 		<div class="sidebar">
 			<div class="profile-image-container">
@@ -26,12 +26,8 @@
 						alt="Profile Photo"
 						style="width: 150px; height: 150px; border-radius: 50%;">
 				</div>
-				<form action="${contextPath}/profile" method="post"
-					enctype="multipart/form-data" class="upload-form">
-					<button type="submit" class="btn btn-upload">Upload Photo</button>
-					<input type="file" id="profileImageInput" name="profileImage"
-						accept="image/*">
-				</form>
+
+
 			</div>
 			<div class="stats-container">
 				<h3 class="stats-title">Your Museum Activity</h3>
@@ -66,7 +62,7 @@
 
 				<div class="form-group">
 					<label for="fullname">Full Name:</label> <input type="text"
-						id="fullname" name="fullname" value="${user.fullName}"
+						id="fullname" name="fullName" value="${user.fullName}"
 						placeholder="Full Name">
 				</div>
 
@@ -104,7 +100,7 @@
 
 				<div class="form-group">
 					<label for="dob">Date of Birth:</label> <input type="date" id="dob"
-						name="dob"
+						name="dateOfBirth"
 						value="${user.dateOfBirth != null ? user.dateOfBirth.toString() : ''}">
 
 				</div>
@@ -115,6 +111,10 @@
 						id="contact" name="contact" value="${user.contact}"
 						placeholder="Contact">
 				</div>
+				<div class="form-group">
+					<label for="userImage">Upload new Image:</label> <input type="file"
+						id="profileImageInput" name="userImage" accept="image/*">
+				</div>
 
 				<div class="buttons">
 					<button type="button" class="btn btn-cancel"
@@ -124,7 +124,7 @@
 			</form>
 		</div>
 	</div>
-
+	<jsp:include page="footer.jsp" />
 </body>
-<jsp:include page="footer.jsp" />
+
 </html>

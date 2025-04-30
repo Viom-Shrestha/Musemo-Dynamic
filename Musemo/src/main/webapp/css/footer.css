@@ -63,12 +63,13 @@
 }
 
 footer .copyright {
-    background-color: #001d2d;
+    background-color:white; /* lighter background */
     text-align: center;
     padding: 10px;
     font-size: 13px;
-    color: #ccc;
+    color: #004080;
 }
+
 
 /* Optional responsiveness */
 @media (max-width: 768px) {

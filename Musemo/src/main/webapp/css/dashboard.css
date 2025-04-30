@@ -36,6 +36,26 @@ body {
 	z-index: 100;
 }
 
+.sidebar .menu-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin: 4px 10px;
+    border-radius: 8px;
+    color: white; /* Added color white for link text */
+    text-decoration: none; /* Remove underline */
+}
+
+.sidebar .menu-item:hover,
+.sidebar .menu-item.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    text-decoration: none; /* Keep no underline on hover */
+    color: white; /* Maintain white color on hover */
+}
+
+
 .logo-container {
 	display: flex;
 	align-items: center;
