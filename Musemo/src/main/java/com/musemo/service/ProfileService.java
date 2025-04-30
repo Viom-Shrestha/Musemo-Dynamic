@@ -43,14 +43,14 @@ public class ProfileService {
 
         UserModel user = null;
         // ✅ Include the userImage column in the SELECT query
-        String sql = "SELECT username, fullname, password, gender, email, dateOfBirth, contact, userImage FROM user WHERE username = ?";
+        String sql = "SELECT username, fullName, password, gender, email, dateOfBirth, contact, userImage FROM user WHERE username = ?";
         try (PreparedStatement ps = dbConn.prepareStatement(sql)) {
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 user = new UserModel();
                 user.setUsername(rs.getString("username"));
-                user.setFullName(rs.getString("fullname"));
+                user.setFullName(rs.getString("fullName"));
                 user.setPassword(rs.getString("password"));
                 user.setGender(rs.getString("gender"));
                 user.setEmail(rs.getString("email"));
@@ -131,7 +131,6 @@ public class ProfileService {
             return;
         }
 
-        // ✅ Include userImage in the UPDATE statement
         String sql = "UPDATE user SET fullName = ?, password = ?, gender = ?, email = ?, dateOfBirth = ?, contact = ?, userImage = ? WHERE username = ?";
         try (PreparedStatement ps = dbConn.prepareStatement(sql)) {
             ps.setString(1, user.getFullName());
@@ -149,7 +148,6 @@ public class ProfileService {
                     return;
                 }
             }
-
             ps.setString(3, user.getGender());
             ps.setString(4, user.getEmail());
 
@@ -158,9 +156,7 @@ public class ProfileService {
             } else {
                 ps.setDate(5, null);
             }
-
             ps.setString(6, user.getContact());
-            // ✅ Set the userImage in the PreparedStatement
             ps.setString(7, user.getUserImage());
             ps.setString(8, user.getUsername());
 

@@ -1,7 +1,7 @@
 package com.musemo.model;
 
 public class ArtifactModel {
-	private int artifactID;
+	private String artifactID;
 	private String artifactName;
 	private String artifactType;
 	private String creatorName;
@@ -15,7 +15,7 @@ public class ArtifactModel {
 		super();
 	}
 
-	public ArtifactModel(int artifactID, String artifactName, String artifactType, String creatorName,
+	public ArtifactModel(String artifactID, String artifactName, String artifactType, String creatorName,
 			String timePeriod, String origin, String condition, String description, String artifactImage) {
 		super();
 		this.artifactID = artifactID;
@@ -42,11 +42,11 @@ public class ArtifactModel {
 		this.artifactImage = artifactImage;
 	}
 
-	public int getArtifactID() {
+	public String getArtifactID() {
 		return artifactID;
 	}
 
-	public void setArtifactID(int artifactID) {
+	public void setArtifactID(String artifactID) {
 		this.artifactID = artifactID;
 	}
 

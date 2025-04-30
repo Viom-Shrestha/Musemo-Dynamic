@@ -8,18 +8,21 @@ public class BookingModel {
 	private String username;
 	private Date bookingDate;
 	private String bookingTime;
+	private String ticket;
 
 	public BookingModel() {
 		super();
 	}
 
-	public BookingModel(int bookingId, int exhibitionId, String username, Date bookingDate, String bookingTime) {
+	public BookingModel(int bookingId, int exhibitionId, String username, Date bookingDate, String bookingTime,
+			String ticket) {
 		super();
 		this.bookingId = bookingId;
 		this.exhibitionId = exhibitionId;
 		this.username = username;
 		this.bookingDate = bookingDate;
 		this.bookingTime = bookingTime;
+		this.ticket = ticket;
 	}
 
 	public int getBookingId() {
@@ -60,6 +63,14 @@ public class BookingModel {
 
 	public void setBookingTime(String bookingTime) {
 		this.bookingTime = bookingTime;
+	}
+
+	public String getTicket() {
+		return ticket;
+	}
+
+	public void setTicket(String ticket) {
+		this.ticket = ticket;
 	}
 
 }

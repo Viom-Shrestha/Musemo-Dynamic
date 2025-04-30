@@ -10,12 +10,12 @@ import java.io.IOException;
 /**
  * @author Viom Shrestha
  */
-@WebServlet(asyncSupported = true, urlPatterns = { "/booking" })
-public class BookingController extends HttpServlet {
+@WebServlet(asyncSupported = true, urlPatterns = { "/artifactManagement" })
+public class ArtifactManagementController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("WEB-INF/pages/booking.jsp").forward(request,response);
+		request.getRequestDispatcher("WEB-INF/pages/artifactManagement.jsp").forward(request,response);
 	}
 
 	/**

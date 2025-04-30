@@ -3,7 +3,7 @@ package com.musemo.model;
 import java.util.Date;
 
 public class ExhibitionModel {
-	private int exhibitionId;
+	private String exhibitionId;
 	private String exhibitionTitle;
 	private String exhibitionDescription;
 	private Date startDate;
@@ -14,7 +14,7 @@ public class ExhibitionModel {
 		super();
 	}
 
-	public ExhibitionModel(int exhibitionId, String exhibitionTitle, String exhibitionDescription, Date startDate,
+	public ExhibitionModel(String exhibitionId, String exhibitionTitle, String exhibitionDescription, Date startDate,
 			Date endDate, String exhibitionImage) {
 		super();
 		this.exhibitionId = exhibitionId;
@@ -35,11 +35,11 @@ public class ExhibitionModel {
 		this.exhibitionImage = exhibitionImage;
 	}
 
-	public int getExhibitionId() {
+	public String getExhibitionId() {
 		return exhibitionId;
 	}
 
-	public void setExhibitionId(int exhibitionId) {
+	public void setExhibitionId(String exhibitionId) {
 		this.exhibitionId = exhibitionId;
 	}
 

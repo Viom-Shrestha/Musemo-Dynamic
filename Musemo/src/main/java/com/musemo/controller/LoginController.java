@@ -5,8 +5,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
 
 import com.musemo.model.UserModel;
@@ -62,9 +60,6 @@ public class LoginController extends HttpServlet {
 	        if (role.equalsIgnoreCase("Admin")) {
 	            resp.sendRedirect(req.getContextPath() + "/dashboard");
 	        } else {
-	            HttpSession session = req.getSession();
-	            SessionUtil.setAttribute(req, "username", username);
-	            System.out.println("Login successful for user: " + username + ", Session ID: " + session.getId());
 	            resp.sendRedirect(req.getContextPath() + "/home");
 	        }
 	    }

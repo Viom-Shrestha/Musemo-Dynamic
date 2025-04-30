@@ -19,13 +19,16 @@ import com.musemo.util.SessionUtil;
 public class AuthenticationFilter implements Filter {
 
 	private static final String LOGIN = "/login";
+	private static final String LOGOUT = "/logout";
 	private static final String REGISTER = "/register";
 	private static final String HOME = "/home";
 	private static final String ROOT = "/";
 	private static final String ABOUT = "/about";
 	private static final String CONTACT = "/contact";
 	private static final String EXHIBITION = "/exhibition";
-	private static final String ARTIFACTS = "/artifacts";
+	private static final String ARTIFACTS = "/artifact";
+	private static final String EXHIBITIONDETAILS = "/exhibitionDetails";
+	private static final String ARTIFACTDETAILS = "/artifactDetails";
 	private static final String BOOKING = "/booking";
 	private static final String USER_PROFILE = "/profile";
 
@@ -67,7 +70,8 @@ public class AuthenticationFilter implements Filter {
 				res.sendRedirect(req.getContextPath() + DASHBOARD);
 				return; // Added return
 			} else if (uri.endsWith(DASHBOARD) || uri.endsWith(ADMIN_PROFILE) || uri.endsWith(USER_MANAGEMENT)
-					|| uri.endsWith(ARTIFACT_MANAGEMENT) || uri.endsWith(HOME) || uri.endsWith(ROOT) || uri.endsWith(EXHIBITION_MANAGEMENT)) {
+					|| uri.endsWith(ARTIFACT_MANAGEMENT) || uri.endsWith(HOME) || uri.endsWith(ROOT)
+					|| uri.endsWith(LOGOUT) || uri.endsWith(EXHIBITION_MANAGEMENT)) {
 				// Allow access to all admin pages
 				chain.doFilter(request, response);
 				return; // Added return
@@ -82,7 +86,8 @@ public class AuthenticationFilter implements Filter {
 				return; // Added return
 			} else if (uri.endsWith(HOME) || uri.endsWith(ROOT) || uri.endsWith(ABOUT) || uri.endsWith(CONTACT)
 					|| uri.endsWith(EXHIBITION) || uri.endsWith(ARTIFACTS) || uri.endsWith(BOOKING)
-					|| uri.endsWith(USER_PROFILE)) {
+					|| uri.endsWith(USER_PROFILE) || uri.endsWith(EXHIBITIONDETAILS) || uri.endsWith(ARTIFACTDETAILS)
+					|| uri.endsWith(LOGOUT)) {
 				chain.doFilter(request, response);
 				return; // Added return
 			} else if (uri.startsWith("/admin")) {
@@ -96,7 +101,7 @@ public class AuthenticationFilter implements Filter {
 			// Not logged in
 			if (uri.endsWith(LOGIN) || uri.endsWith(REGISTER) || uri.endsWith(HOME) || uri.endsWith(ROOT)
 					|| uri.endsWith(ABOUT) || uri.endsWith(CONTACT) || uri.endsWith(EXHIBITION)
-					|| uri.endsWith(ARTIFACTS)) {
+					|| uri.endsWith(ARTIFACTS) || uri.endsWith(EXHIBITIONDETAILS) || uri.endsWith(ARTIFACTDETAILS)) {
 				chain.doFilter(request, response);
 				return; // Added return
 			} else {

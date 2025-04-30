@@ -8,21 +8,30 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author Viom Shrestha
+ * Servlet implementation class userManagementController
  */
-@WebServlet(asyncSupported = true, urlPatterns = { "/booking" })
-public class BookingController extends HttpServlet {
+@WebServlet(asyncSupported = true, urlPatterns = { "/userManagement"})
+public class UserManagementController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public UserManagementController() {
+        super();
+    }
 
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("WEB-INF/pages/booking.jsp").forward(request,response);
+		request.getRequestDispatcher("/WEB-INF/pages/userManagement.jsp").forward(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
