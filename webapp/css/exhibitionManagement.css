@@ -1,17 +1,11 @@
 @charset "UTF-8";
 
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	
-}
-
+/* General Body Styles */
 body {
-	display: flex;
-	min-height: 100vh;
+	margin: 0;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	background-color: #f4f4f9;
+	color: #333;
 }
 
 /* Sidebar */
@@ -26,26 +20,7 @@ body {
 	z-index: 100;
 }
 
-.sidebar .menu-item {
-	display: flex;
-	align-items: center;
-	padding: 15px 20px;
-	cursor: pointer;
-	transition: all 0.3s;
-	margin: 4px 10px;
-	border-radius: 8px;
-	color: white;
-	text-decoration: none;
-}
-
-.sidebar .menu-item:hover,
-.sidebar .menu-item.active {
-	background-color: rgba(255, 255, 255, 0.1);
-	color: white;
-	text-decoration: none;
-}
-
-.logo-container {
+.sidebar .logo-container {
 	display: flex;
 	align-items: center;
 	padding: 0 20px 20px;
@@ -75,31 +50,31 @@ body {
 	letter-spacing: 1px;
 }
 
-.menu-item {
+.sidebar .menu-item {
 	display: flex;
 	align-items: center;
 	padding: 15px 20px;
 	cursor: pointer;
-	transition: all 0.3s;
 	margin: 4px 10px;
 	border-radius: 8px;
+	color: white;
+	text-decoration: none;
+	transition: all 0.3s;
 }
 
-.menu-item:hover,
-.menu-item.active {
+.sidebar .menu-item:hover,
+.sidebar .menu-item.active {
 	background-color: rgba(255, 255, 255, 0.1);
+	color: white;
+	text-decoration: none;
 }
 
-.menu-item i {
+.sidebar .menu-item i {
 	margin-right: 15px;
 	font-size: 18px;
 }
 
-.menu-item span {
-	font-size: 16px;
-	font-weight: 500;
-}
-
+/* Main Content */
 .main-content {
 	flex: 1;
 	padding: 24px;
@@ -116,7 +91,7 @@ body {
 /* Search and Filter */
 .search-filter {
 	display: flex;
-	gap: 15px;
+	gap: 100px;
 	margin-bottom: 25px;
 }
 
@@ -127,7 +102,7 @@ body {
 
 .search-input input {
 	width: 100%;
-	padding: 12px 12px 12px 40px;
+	padding: 12px 40px 12px 40px;
 	border: 1px solid #ddd;
 	border-radius: 4px;
 	font-size: 16px;
@@ -156,8 +131,8 @@ body {
 	background-position: calc(100% - 15px) center;
 }
 
-/* Table Styles */
-.artifact-table {
+/* Exhibition Table */
+.exhibition-table {
 	width: 100%;
 	border-collapse: collapse;
 	margin-bottom: 30px;
@@ -166,53 +141,17 @@ body {
 	overflow: hidden;
 }
 
-.artifact-table th,
-.artifact-table td {
+.exhibition-table th,
+.exhibition-table td {
 	padding: 12px 15px;
 	text-align: left;
 	border-bottom: 1px solid #eee;
-	color: #333;
 }
 
-.artifact-table th {
+.exhibition-table th {
 	background-color: #1a8ba0;
 	color: white;
-}
-
-.artifact-table tr:hover {
-	background-color: #f9f9f9;
-}
-
-/* Unified Action Buttons */
-.action-buttons {
-	display: flex;
-	gap: 8px;
-}
-
-.action-buttons a {
-	color: #2980b9;
-	text-decoration: none;
-	font-size: 1.2em;
-}
-
-.action-buttons .delete-button {
-	color: #e74c3c;
-}
-
-.edit-button,
-.delete-button {
-	font-size: 14px;
-	padding: 6px 10px;
-	border-radius: 4px;
-	transition: background 0.2s ease-in-out;
-}
-
-.edit-button:hover {
-	background-color: rgba(0, 102, 204, 0.1);
-}
-
-.delete-button:hover {
-	background-color: rgba(204, 0, 0, 0.1);
+	height: 40px;
 }
 
 .image-cell img {
@@ -222,9 +161,21 @@ body {
 	border-radius: 6px;
 }
 
-/* Form Styles */
+/* Action Buttons */
+.action-buttons a {
+	margin-right: 10px;
+	color: #2980b9;
+	text-decoration: none;
+	font-size: 1.2em;
+}
+
+.action-buttons .delete-button {
+	color: #e74c3c;
+}
+
+/* Form Container */
 .form-container {
-	background: #26a0b7;
+	background-color: #26a0b7;
 	padding: 25px;
 	border-radius: 10px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
@@ -236,33 +187,36 @@ body {
 	margin-bottom: 20px;
 }
 
-.artifact-form .form-group {
-	margin-bottom: 15px;
-	display: flex;
-	flex-direction: column;
-	flex: 1;
-}
-
-.artifact-form .form-row {
+/* Form Layout */
+.exhibition-form .form-row {
 	display: flex;
 	gap: 20px;
+	flex-wrap: wrap;
 }
 
-.artifact-form label {
-	font-weight: bold;
+.form-group {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 15px;
+}
+
+.form-group label {
 	margin-bottom: 5px;
+	font-weight: bold;
 }
 
-.artifact-form input[type="text"],
-.artifact-form input[type="file"],
-.artifact-form textarea {
-	padding: 8px;
+.form-group input,
+.form-group textarea,
+.form-group select {
+	padding: 10px;
 	border: 1px solid #ccc;
-	border-radius: 6px;
+	border-radius: 8px;
 	font-size: 14px;
+	resize: vertical;
 }
 
-/* Form Buttons */
+/* Buttons */
 .form-buttons {
 	display: flex;
 	justify-content: flex-end;
@@ -270,33 +224,35 @@ body {
 	margin-top: 20px;
 }
 
-.clear-button,
-.add-button,
-.update-button,
-.cancel-button {
+.form-buttons button,
+.form-buttons a {
 	padding: 10px 20px;
 	border: none;
-	border-radius: 6px;
+	border-radius: 8px;
 	cursor: pointer;
+	text-decoration: none;
+	color: white;
 	font-weight: bold;
+	transition: background 0.3s ease;
+}
+
+.add-button {
+	background-color: #2ecc71;
+}
+
+.update-button {
+	background-color: #f39c12;
+}
+
+.cancel-button {
+	background-color: #95a5a6;
 }
 
 .clear-button {
 	background-color: #e74c3c;
-	color: white;
 }
 
-.add-button {
-	background-color: #28a745;
-	color: white;
-}
-
-.update-button {
-	background-color: #8080ff;
-	color: white;
-}
-
-.cancel-button {
-	background-color: #dc3545;
-	color: white;
+.form-buttons button:hover,
+.form-buttons a:hover {
+	opacity: 0.9;
 }

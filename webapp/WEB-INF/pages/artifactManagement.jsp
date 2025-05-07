@@ -31,9 +31,8 @@
 			class="fas fa-users"></i> <span>User Management</span>
 		</a> <a href="${contextPath}/artifactManagement" class="menu-item active">
 			<i class="fas fa-archive"></i> <span>Artifact Management</span>
-		</a> <a href="${contextPath}/exhibitionManagement" class="menu-item"> <i
-			class="fas fa-calendar-alt"></i> <span>Exhibitions And
-				Bookings</span>
+		</a> <a href="${contextPath}/exhibitionManagement" class="menu-item">
+			<i class="fas fa-calendar-alt"></i> <span>Exhibitions</span>
 		</a> <a href="${contextPath}/adminProfile" class="menu-item"> <i
 			class="fas fa-user-cog"></i> <span>Admin Profile</span>
 		</a>
@@ -43,33 +42,31 @@
 	<div class="main-content">
 		<h1 class="page-title">Artifact Management</h1>
 
-		<!-- Search and Filter Controls -->
-		<div class="search-bar-container">
-			<div class="search-bar">
-				<i class="fa-solid fa-search search-icon"></i> <input type="text"
-					class="search-input" placeholder="Search" id="artifact-search">
-			</div>
-
-			<div class="filter-controls">
-				<div style="position: relative;">
-					<select class="search-by" id="search-by">
-						<option>Search By</option>
-						<option>Name</option>
-						<option>Type</option>
-						<option>Origin</option>
-						<option>Time Period</option>
-					</select> <i class="fa-solid fa-chevron-down dropdown-icon"></i>
+		<!-- Search and Filter -->
+		<div class="search-filter">
+			<form method="get" action="${contextPath}/artifactManagement"
+				class="search-filter">
+				<div class="search-input">
+					<i class="fas fa-search"></i> <input type="text" name="keyword"
+						placeholder="Search" value="${param.keyword}">
 				</div>
-
-				<button class="sort-button" aria-label="Sort ascending">
-					<i class="fa-solid fa-arrow-up"></i>
-				</button>
-
-				<button class="sort-button" aria-label="Sort descending">
-					<i class="fa-solid fa-arrow-down"></i>
-				</button>
-			</div>
+				<div class="filter-select">
+					<select name="searchBy">
+						<option value="">Search By</option>
+						<option value="artifactName"
+							${param.searchBy == 'artifactName' ? 'selected' : ''}>Name</option>
+						<option value="artifactType"
+							${param.searchBy == 'artifactType' ? 'selected' : ''}>Type</option>
+						<option value="origin"
+							${param.searchBy == 'origin' ? 'selected' : ''}>Origin</option>
+						<option value="condition"
+							${param.searchBy == 'condition' ? 'selected' : ''}>Condition</option>
+					</select>
+				</div>
+			</form>
 		</div>
+
+
 
 		<!-- Artifacts Table -->
 		<table class="artifact-table" id="artifacts-table">
@@ -88,140 +85,121 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
+				<c:forEach var="artifact" items="${artifacts}">
+					<tr>
+						<td class="image-cell"><img
+							src="${contextPath}/resources/images/artifact/${artifact.artifactImage}"
+							alt="Artifact Image" class="user-image"></td>
+						<td>${artifact.artifactID}</td>
+						<td>${artifact.artifactName}</td>
+						<td>${artifact.artifactType}</td>
+						<td>${artifact.creatorName}</td>
+						<td>${artifact.timePeriod}</td>
+						<td>${artifact.origin}</td>
+						<td>${artifact.condition}</td>
+						<td>${artifact.description}</td>
+						<td>
+							<div class="action-buttons">
+								<a
+									href="${contextPath}/artifactManagement?editId=${artifact.artifactID}"
+									class="edit-button" aria-label="Edit"> <i
+									class="fa-solid fa-pen-to-square"></i>
+								</a> <a
+									href="${contextPath}/artifactManagement?deleteId=${artifact.artifactID}"
+									class="delete-button" aria-label="Delete"
+									onclick="return confirm('Are you sure you want to delete this artifact?');">
+									<i class="fa-solid fa-trash"></i>
+								</a>
 
-					<td class="image-cell"><img
-						src="${contextPath}/resources/images/artifact/MonaLisa.jpg"
-						alt="User Image" class="user-image"></td>
-					<td>A0123</td>
-					<td>Ancient Greek Vase</td>
-					<td>Ceramic</td>
-					<td>A</td>
-					<td>5th Century BCE</td>
-					<td>Greece</td>
-					<td>Good</td>
-					<td>The Moan Lisa is a half-length portrait painting by the
-						Italian artist Leonardo da Vinci. Considered an archetypal
-						masterpiece of the Italian Renaissance.</td>
-					<td>
-						<div class="action-buttons">
-							<button class="edit-button" aria-label="Edit">
-								<i class="fa-solid fa-pen-to-square"></i>
-							</button>
-							<button class="delete-button" aria-label="Delete">
-								<i class="fa-solid fa-trash"></i>
-							</button>
-						</div>
-					</td>
-				</tr>
-				<tr>
-
-					<td class="image-cell"><img
-						src="${contextPath}/resources/images/artifact/WingedVictory.jpg"
-						alt="User Image" class="user-image"></td>
-					<td>A0041</td>
-					<td>Ming Dynasty Vase</td>
-					<td>Ceramic</td>
-					<td>B</td>
-					<td>15th Century</td>
-					<td>China</td>
-					<td>Bad</td>
-					<td>The Thinker (French: Le Penseur), by Auguste Rodin, is a
-						bronze sculpture depicting a nude male figure of heroic size,
-						seated on a large rock, leaning forward, right elbow placed upon
-						the left thigh, back of the right hand supporting the chin in a
-						posture evocative of deep thought and contemplation.</td>
-					<td>
-						<div class="action-buttons">
-							<button class="edit-button" aria-label="Edit">
-								<i class="fa-solid fa-pen-to-square"></i>
-							</button>
-							<button class="delete-button" aria-label="Delete">
-								<i class="fa-solid fa-trash"></i>
-							</button>
-						</div>
-					</td>
-				</tr>
-				<tr>
-
-					<td class="image-cell"><img
-						src="${contextPath}/resources/images/artifact/TheThinker.jpg"
-						alt="User Image" class="user-image"></td>
-					<td>A1234</td>
-					<td>Ancient Vase</td>
-					<td>Pottery</td>
-					<td>C</td>
-					<td>500 BCE</td>
-					<td>Unknown</td>
-					<td>Bad</td>
-					<td>The Rosetta Stoned is a stele of granodiorite inscribed
-						with three versions of a decree issued in 196 BC during the
-						Ptolemaic dynasty of Egypt, on behalf of King Ptolemy V Epiphanes.</td>
-					<td>
-						<div class="action-buttons">
-							<button class="edit-button" aria-label="Edit">
-								<i class="fa-solid fa-pen-to-square"></i>
-							</button>
-							<button class="delete-button" aria-label="Delete">
-								<i class="fa-solid fa-trash"></i>
-							</button>
-						</div>
-					</td>
-				</tr>
+							</div>
+						</td>
+					</tr>
+				</c:forEach>
 			</tbody>
 		</table>
 
-		<!-- Add New Artifact Button -->
-		<button class="add-artifact-button">Add New Artifact</button>
+		<!-- Artifact Form Container -->
+		<div class="form-container">
+			<h2>${editArtifact != null ? "Update Artifact" : "Add New Artifact"}</h2>
+			<form action="${contextPath}/artifactManagement" method="post"
+				enctype="multipart/form-data" class="artifact-form">
+
+				<div class="form-row">
+					<div class="form-group">
+						<label for="artifactID">Artifact ID</label> <input type="text"
+							id="artifactID" name="artifactID"
+							value="${editArtifact.artifactID}"
+							<c:if test="${editArtifact != null}">readonly</c:if> required>
+					</div>
+					<div class="form-group">
+						<label for="artifactName">Artifact Name</label> <input type="text"
+							id="artifactName" name="artifactName"
+							value="${editArtifact.artifactName}" required>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="artifactType">Artifact Type</label> <input type="text"
+						id="artifactType" name="artifactType"
+						value="${editArtifact.artifactType}" required>
+				</div>
+
+				<div class="form-row">
+					<div class="form-group">
+						<label for="creatorName">Creator Name</label> <input type="text"
+							id="creatorName" name="creatorName"
+							value="${editArtifact.creatorName}" required>
+					</div>
+					<div class="form-group">
+						<label for="timePeriod">Time Period</label> <input type="text"
+							id="timePeriod" name="timePeriod"
+							value="${editArtifact.timePeriod}" required>
+					</div>
+				</div>
+
+				<div class="form-row">
+					<div class="form-group">
+						<label for="origin">Origin</label> <input type="text" id="origin"
+							name="origin" value="${editArtifact.origin}" required>
+					</div>
+					<div class="form-group">
+						<label for="condition">Condition</label> <input type="text"
+							id="condition" name="condition" value="${editArtifact.condition}"
+							required>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="description">Description</label>
+					<textarea id="description" name="description" rows="4" required><c:out
+							value="${editArtifact.description}" /></textarea>
+				</div>
+
+				<div class="form-group">
+					<label for="artifactImage">Artifact Image</label> <input
+						type="file" id="artifactImage" name="artifactImage"
+						accept="image/*"
+						<c:if test="${editArtifact == null}">required</c:if>>
+				</div>
+				
+				<div class="form-buttons">
+					<c:choose>
+						<c:when test="${editArtifact != null}">
+							<button type="submit" class="update-button">Update
+								Artifact</button>
+							<a href="${contextPath}/artifactManagement" class="cancel-button">Cancel
+								Update</a>
+						</c:when>
+						<c:otherwise>
+							<button type="submit" class="add-button">Add Artifact</button>
+						</c:otherwise>
+					</c:choose>
+					<button type="reset" class="clear-button">Clear</button>
+				</div>
+			</form>
+		</div>
+
 	</div>
 
-	<script>
-        // Add basic search functionality
-        document.getElementById('artifact-search').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const rows = document.querySelectorAll('#artifacts-table tbody tr');
-            
-            rows.forEach(row => {
-                let found = false;
-                const cells = row.querySelectorAll('td');
-                
-                cells.forEach(cell => {
-                    if (cell.textContent.toLowerCase().includes(searchTerm)) {
-                        found = true;
-                    }
-                });
-                
-                row.style.display = found ? '' : 'none';
-            });
-        });
-
-        // Add delete functionality
-        const deleteButtons = document.querySelectorAll('.delete-button');
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                if (confirm('Are you sure you want to delete this artifact?')) {
-                    const row = this.closest('tr');
-                    row.remove();
-                }
-            });
-        });
-
-        // Add edit functionality (placeholder)
-        const editButtons = document.querySelectorAll('.edit-button');
-        editButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const row = this.closest('tr');
-                const artifactId = row.querySelector('td:nth-child(2)').textContent;
-                alert(`Edit artifact ${artifactId}`);
-                // In a real application, this would open an edit form or modal
-            });
-        });
-
-        // Add New Artifact button functionality
-        document.querySelector('.add-artifact-button').addEventListener('click', function() {
-            alert('Add new artifact form would open here');
-            // In a real application, this would open a form or modal for adding a new artifact
-        });
-    </script>
 </body>
 </html>

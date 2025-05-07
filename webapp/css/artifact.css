@@ -11,13 +11,18 @@ body {
 	background-color: #003950; /* Dark blue background */
 	color: #333;
 }
-
 /* Search and filter section */
 .search-section {
 	background-color: #20B2AA; /* Teal */
 	padding: 15px 30px;
-	display: flex;
-	gap: 15px;
+	align-items: center;
+	gap: 15px; /* Adjust the gap between items as needed */
+}
+
+.category {
+	/* Remove flex-grow if you want it to take up only necessary space */
+	position: relative;
+	margin-bottom: 5px;
 }
 
 .category-dropdown, .field-dropdown {
@@ -31,8 +36,15 @@ body {
 }
 
 .search-bar {
-	flex-grow: 1;
+	flex-grow: 1; /* Allows the search bar to take up remaining space */
 	position: relative;
+}
+
+.search-info {
+	text-align: center;
+	margin: 10px 0;
+	font-size: 1.1em;
+	color: #ffffff;
 }
 
 .search-input {

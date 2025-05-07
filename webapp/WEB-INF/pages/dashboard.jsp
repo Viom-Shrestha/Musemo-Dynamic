@@ -25,25 +25,17 @@
 			<div class="brand-name">MUSEMO Admin</div>
 		</div>
 
-		 <a href="${contextPath}/dashboard" class="menu-item active">
-        <i class="fas fa-th-large"></i> <span>Dashboard</span>
-    </a>
-
-    <a href="${contextPath}/userManagement" class="menu-item">
-        <i class="fas fa-users"></i> <span>User Management</span>
-    </a>
-
-    <a href="${contextPath}/artifactManagement" class="menu-item">
-        <i class="fas fa-archive"></i> <span>Artifact Management</span>
-    </a>
-
-    <a href="${contextPath}/exhibitionManagement" class="menu-item">
-        <i class="fas fa-calendar-alt"></i> <span>Exhibitions And Bookings</span>
-    </a>
-
-    <a href="${contextPath}/adminProfile" class="menu-item">
-        <i class="fas fa-user-cog"></i> <span>Admin Profile</span>
-    </a>
+		<a href="${contextPath}/dashboard" class="menu-item active"> <i
+			class="fas fa-th-large"></i> <span>Dashboard</span>
+		</a> <a href="${contextPath}/userManagement" class="menu-item"> <i
+			class="fas fa-users"></i> <span>User Management</span>
+		</a> <a href="${contextPath}/artifactManagement" class="menu-item"> <i
+			class="fas fa-archive"></i> <span>Artifact Management</span>
+		</a> <a href="${contextPath}/exhibitionManagement" class="menu-item">
+			<i class="fas fa-calendar-alt"></i> <span>Exhibitions</span>
+		</a> <a href="${contextPath}/adminProfile" class="menu-item"> <i
+			class="fas fa-user-cog"></i> <span>Admin Profile</span>
+		</a>
 	</div>
 
 	<div class="main-content">
@@ -87,9 +79,6 @@
 				<canvas id="artifactChart"></canvas>
 			</div>
 
-
-
-
 			<div class="recent-activity">
 				<div class="chart-header">
 					<span>Recent Activity</span>
@@ -119,6 +108,73 @@
 				</ul>
 			</div>
 		</div>
+		<div class="data-section">
+				<h2>User Booking Details</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>Username</th>
+							<th>Full Name</th>
+							<th>Exhibition</th>
+							<th>Date</th>
+							<th>Time</th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach var="detail" items="${userBookingDetails}">
+							<tr>
+								<td>${detail.username}</td>
+								<td>${detail.fullName}</td>
+								<td>${detail.exhibitionTitle}</td>
+								<td>${detail.bookingDate}</td>
+								<td>${detail.bookingTime}</td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="data-section">
+				<h2>Exhibitions and Their Artifacts</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>Exhibition</th>
+							<th>Artifact</th>
+							<th>Type</th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach var="detail" items="${exhibitionArtifactDetails}">
+							<tr>
+								<td>${detail.exhibitionTitle}</td>
+								<td>${detail.artifactName}</td>
+								<td>${detail.artifactType}</td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="data-section">
+				<h2>Top Booked Exhibitions</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>Exhibition</th>
+							<th>Bookings</th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach var="item" items="${mostBookedExhibitions}">
+							<tr>
+								<td>${item.exhibitionTitle}</td>
+								<td>${item.totalBookings}</td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</div>
 	</div>
 
 	<script>

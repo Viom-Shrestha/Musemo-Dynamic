@@ -123,6 +123,7 @@ h2 {
 }
 
 /* Card Container (No changes requested) */
+
 .card-container {
     display: flex;
     justify-content: space-around;

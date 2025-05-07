@@ -32,17 +32,14 @@
 		</a> <a href="${contextPath}/artifactManagement" class="menu-item"> <i
 			class="fas fa-archive"></i> <span>Artifact Management</span>
 		</a> <a href="${contextPath}/exhibitionManagement" class="menu-item">
-			<i class="fas fa-calendar-alt"></i> <span>Exhibitions And
-				Bookings</span>
+			<i class="fas fa-calendar-alt"></i> <span>Exhibitions</span>
 		</a> <a href="${contextPath}/adminProfile" class="menu-item"> <i
 			class="fas fa-user-cog"></i> <span>Admin Profile</span>
 		</a>
 	</div>
 	<!-- Main Content -->
 	<main class="main-content">
-		<div class="page-header">
-			<h1>User Management</h1>
-		</div>
+	<h1 class="page-title">User Management</h1>
 
 		<!-- Search and Filter -->
 		<div class="search-filter">
@@ -62,7 +59,6 @@
 					</select>
 				</div>
 			</form>
-
 		</div>
 
 		<!-- User Table -->

@@ -36,7 +36,6 @@
                 <c:forEach var="exhibition" items="${featuredExhibitions}">
                     <div class="card">
                         <div class="card-img">
-                            
                             <img src="${contextPath}/resources/images/exhibition/${exhibition.exhibitionImage}" alt="${exhibition.exhibitionTitle}">
                         </div>
                         <div class="card-content">

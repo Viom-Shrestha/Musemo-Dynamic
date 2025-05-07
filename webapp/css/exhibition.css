@@ -25,6 +25,13 @@ body {
 	position: relative;
 }
 
+.search-info {
+	text-align: center;
+	margin: 10px 0;
+	font-size: 1.1em;
+	color: #ffffff;
+}
+
 .search-input {
 	width: 100%;
 	padding: 8px 15px 8px 35px;

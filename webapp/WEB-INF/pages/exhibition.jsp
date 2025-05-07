@@ -19,13 +19,23 @@
 </head>
 <body>
 	<jsp:include page="header.jsp" />
-	<!-- Search and Filter Section -->
 	<div class="search-section">
-		<div class="search-bar">
+		<form method="get" action="${contextPath}/exhibition"
+			class="search-bar">
 			<i class="fa-solid fa-search search-icon"></i> <input type="text"
-				class="search-input" placeholder="Search">
-		</div>
+				name="keyword" class="search-input" placeholder="Search"
+				value="${param.keyword}">
+		</form>
 	</div>
+
+	<c:if test="${not empty param.keyword}">
+		<div class="search-info">
+			<p>
+				Search results for: "<strong>${param.keyword}</strong>"
+			</p>
+		</div>
+	</c:if>
+
 
 	<!-- Gallery Grid -->
 	<div class="gallery-container">

@@ -56,14 +56,6 @@
 				<p>${artifact.description}</p>
 			</div>
 			
-			
-			<!-- Exhibition Info (Optional or Static for now) 
-			<div class="current-exhibition">
-				<h3>Current Exhibition</h3>
-				<p>To be determined or retrieved from database</p>
-			</div>
-			
-			-->
 		</div>
 	</main>
 

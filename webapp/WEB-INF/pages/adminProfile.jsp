@@ -29,8 +29,7 @@
 		</a> <a href="${contextPath}/artifactManagement" class="menu-item"> <i
 			class="fas fa-archive"></i> <span>Artifact Management</span>
 		</a> <a href="${contextPath}/exhibitionManagement" class="menu-item">
-			<i class="fas fa-calendar-alt"></i> <span>Exhibitions And
-				Bookings</span>
+			<i class="fas fa-calendar-alt"></i> <span>Exhibitions</span>
 		</a> <a href="${contextPath}/adminProfile" class="menu-item active"> <i
 			class="fas fa-user-cog"></i> <span>Admin Profile</span>
 		</a>
@@ -54,55 +53,35 @@
 				<div class="profile-details">
 					<h2 class="profile-header">Admin Information</h2>
 
-					<form id="admin-profile-form">
+					<form action="${contextPath}/adminProfile" method="post">
+						<div class="form-group">
+							<label for="fullName" class="form-label">Full Name:</label> <input
+								type="text" id="fullName" name="fullName" class="form-input"
+								placeholder="Full Name" value="${admin.fullName}">
+						</div>
+
 						<div class="form-group">
 							<label for="username" class="form-label">Username:</label> <input
-								type="text" id="username" class="form-input"
-								placeholder="Username" value="admin123">
+								type="text" id="username" name="username" class="form-input"
+								placeholder="Username" value="${admin.username}" readonly>
 						</div>
 
 						<div class="form-group">
 							<label for="password" class="form-label">Password:</label> <input
-								type="password" id="password" class="form-input"
-								placeholder="Password" value="********">
+								type="password" id="password" name="password" class="form-input"
+								placeholder="Enter new password (leave blank to keep current)">
 						</div>
 
 						<div class="form-actions">
-							<button type="button" class="btn btn-cancel" id="cancel-button">Cancel</button>
+							<button type="reset" class="btn btn-cancel" id="cancel-button">Cancel</button>
 							<button type="submit" class="btn btn-save">Save Changes</button>
 						</div>
 					</form>
 				</div>
+
+
 			</div>
 		</div>
 	</div>
-
-	<script>
-		// Form submission handler
-		document.getElementById('admin-profile-form').addEventListener(
-				'submit', function(e) {
-					e.preventDefault();
-					const username = document.getElementById('username').value;
-					const password = document.getElementById('password').value;
-
-					// Validate form
-					if (!username || !password) {
-						alert('Please fill in all fields');
-						return;
-					}
-
-					// In a real application, this would send the data to the server
-					alert('Profile updated successfully!');
-				});
-
-		// Cancel button handler
-		document.getElementById('cancel-button').addEventListener('click',
-				function() {
-					// In a real application, this would redirect or reset the form
-					alert('Changes cancelled');
-					// Optionally reset the form
-					document.getElementById('admin-profile-form').reset();
-				});
-	</script>
 </body>
 </html>
