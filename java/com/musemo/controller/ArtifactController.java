@@ -13,7 +13,7 @@ import com.musemo.service.ArtifactService;
 
 /**
  * @author Viom Shrestha
- */
+ */ 
 @WebServlet(asyncSupported = true, urlPatterns = { "/artifact" })
 public class ArtifactController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -26,12 +26,14 @@ public class ArtifactController extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+            throws ServletException, IOException {
+        String keyword = request.getParameter("keyword");
+        String type = request.getParameter("type");
 
-		List<ArtifactModel> artifacts = artifactService.getAllArtifacts();
-		request.setAttribute("artifactList", artifacts);
-		request.getRequestDispatcher("WEB-INF/pages/artifact.jsp").forward(request, response);
-	}
+        List<ArtifactModel> artifacts = artifactService.searchArtifacts(keyword, type);
+        request.setAttribute("artifactList", artifacts);
+        request.getRequestDispatcher("WEB-INF/pages/artifact.jsp").forward(request, response);
+    }
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse

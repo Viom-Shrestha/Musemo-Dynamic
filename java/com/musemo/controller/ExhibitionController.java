@@ -17,27 +17,36 @@ import com.musemo.service.ExhibitionService;
 @WebServlet(asyncSupported = true, urlPatterns = { "/exhibition" })
 public class ExhibitionController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    private ExhibitionService exhibitionService;
+	private ExhibitionService exhibitionService;
 
-    @Override
-    public void init() throws ServletException {
-        exhibitionService = new ExhibitionService();
-    }
+	@Override
+	public void init() throws ServletException {
+		exhibitionService = new ExhibitionService();
+	}
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-        List<ExhibitionModel> exhibition = exhibitionService.getAllExhibitions();
+		String keyword = request.getParameter("keyword");
+		List<ExhibitionModel> exhibition = exhibitionService.getAllExhibitions();
 
-        request.setAttribute("exhibition", exhibition);
-        request.getRequestDispatcher("WEB-INF/pages/exhibition.jsp").forward(request, response);
-    }
+		if (keyword != null && !keyword.trim().isEmpty()) {
+			exhibition = exhibitionService.searchExhibitions(keyword);
+		} else {
+			exhibition = exhibitionService.getAllExhibitions();
+		}
+
+		request.setAttribute("exhibition", exhibition);
+		request.getRequestDispatcher("WEB-INF/pages/exhibition.jsp").forward(request, response);
+	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		doGet(request, response);
 	}
 

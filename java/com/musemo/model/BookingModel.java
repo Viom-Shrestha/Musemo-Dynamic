@@ -1,5 +1,6 @@
 package com.musemo.model;
 
+import java.sql.Time;
 import java.util.Date;
 
 public class BookingModel {
@@ -7,14 +8,23 @@ public class BookingModel {
 	private int exhibitionId;
 	private String username;
 	private Date bookingDate;
-	private String bookingTime;
+	private Time bookingTime;
 	private String ticket;
 
 	public BookingModel() {
 		super();
 	}
 
-	public BookingModel(int bookingId, int exhibitionId, String username, Date bookingDate, String bookingTime,
+	public BookingModel(int exhibitionId, String username, Date bookingDate, Time bookingTime, String ticket) {
+		super();
+		this.exhibitionId = exhibitionId;
+		this.username = username;
+		this.bookingDate = bookingDate;
+		this.bookingTime = bookingTime;
+		this.ticket = ticket;
+	}
+
+	public BookingModel(int bookingId, int exhibitionId, String username, Date bookingDate, Time bookingTime,
 			String ticket) {
 		super();
 		this.bookingId = bookingId;
@@ -57,11 +67,11 @@ public class BookingModel {
 		this.bookingDate = bookingDate;
 	}
 
-	public String getBookingTime() {
+	public Time getBookingTime() {
 		return bookingTime;
 	}
 
-	public void setBookingTime(String bookingTime) {
+	public void setBookingTime(Time bookingTime) {
 		this.bookingTime = bookingTime;
 	}
 

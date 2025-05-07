@@ -9,6 +9,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import com.musemo.service.DashboardService;
+import com.musemo.service.DashboardService.ArtifactExhibitionView;
+import com.musemo.service.DashboardService.ExhibitionBookingCount;
+import com.musemo.service.DashboardService.UserBookingDetails;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,13 +32,18 @@ public class DashboardController extends HttpServlet {
             int activeExhibitionCount = dashboardService.getActiveExhibitionCount();
             int artifactCount = dashboardService.getArtifactCount();
             Map<String, Integer> artifactDistribution = dashboardService.getArtifactDistribution();
-
+            List<UserBookingDetails> userBookingDetails = DashboardService.getUserBookingDetails();
+            List<ArtifactExhibitionView> exhibitionArtifactDetails = DashboardService.getArtifactsInExhibitions();
+            List<ExhibitionBookingCount> mostBookedExhibitions = DashboardService.getExhibitionBookingCounts();
+            
             request.setAttribute("userCount", userCount);
             request.setAttribute("bookingCount", bookingCount);
             request.setAttribute("activeExhibitionCount", activeExhibitionCount);
             request.setAttribute("artifactCount", artifactCount);
             request.setAttribute("artifactDistribution", artifactDistribution);
-
+            request.setAttribute("userBookingDetails", userBookingDetails);
+            request.setAttribute("exhibitionArtifactDetails", exhibitionArtifactDetails);
+            request.setAttribute("mostBookedExhibitions", mostBookedExhibitions);
             request.getRequestDispatcher("/WEB-INF/pages/dashboard.jsp").forward(request, response);
 
         } catch (SQLException | ClassNotFoundException e) {

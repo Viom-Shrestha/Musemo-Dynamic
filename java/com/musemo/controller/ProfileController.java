@@ -128,10 +128,10 @@ public class ProfileController extends HttpServlet {
 			profilePhotoFileName = imageUtil.getImageNameFromPart(profilePhotoPart);
 			System.out.println("Extracted image name: " + profilePhotoFileName);
 
-			String uploadPath = request.getServletContext().getRealPath("/") + "imagesuser";
+			String uploadPath = request.getServletContext().getRealPath("/") + "resources/imagesuser";
 			System.out.println("Resolved upload path: " + uploadPath);
 
-			boolean uploaded = imageUtil.uploadImage(profilePhotoPart, uploadPath, "user");
+			boolean uploaded = imageUtil.uploadImage(profilePhotoPart, uploadPath, imageUtil.getImageNameFromPart(profilePhotoPart));
 
 			if (!uploaded) {
 				System.out.println("Image upload failed.");

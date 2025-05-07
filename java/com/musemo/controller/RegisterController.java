@@ -139,8 +139,8 @@ public class RegisterController extends HttpServlet {
 
 	private boolean uploadImage(HttpServletRequest req) throws IOException, ServletException {
 		Part image = req.getPart("image");
-		String uploadPath = req.getServletContext().getRealPath("/") + "images/user";
-		return imageUtil.uploadImage(image, uploadPath, "user");
+		String uploadPath = req.getServletContext().getRealPath("/") + "resources/imagesuser";
+		return imageUtil.uploadImage(image, uploadPath, imageUtil.getImageNameFromPart(image));
 	}
 
 	private void handleSuccess(HttpServletRequest req, HttpServletResponse resp, String message, String redirectPage)

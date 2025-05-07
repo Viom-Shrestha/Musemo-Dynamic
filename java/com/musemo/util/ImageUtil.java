@@ -71,31 +71,22 @@ public class ImageUtil {
 	 * @return {@code true} if the file was successfully uploaded, {@code false}
 	 *         otherwise.
 	 */
-	public boolean uploadImage(Part part, String rootPath, String saveFolder) {
-		String savePath = getSavePath(saveFolder);
-		File fileSaveDir = new File(savePath);
+	public boolean uploadImage(Part part, String fullUploadPath, String fileName) {
+		File fileSaveDir = new File(fullUploadPath);
 
-		// Ensure the directory exists
 		if (!fileSaveDir.exists()) {
-			if (!fileSaveDir.mkdir()) {
-				return false; // Failed to create the directory
+			if (!fileSaveDir.mkdirs()) {
+				return false;
 			}
 		}
+
 		try {
-			// Get the image name
-			String imageName = getImageNameFromPart(part);
-			// Create the file path
-			String filePath = savePath + "/" + imageName;
-			// Write the file to the server
-			part.write(filePath);
-			return true; // Upload successful
+			String fullPath = fullUploadPath + File.separator + fileName;
+			part.write(fullPath);
+			return true;
 		} catch (IOException e) {
-			e.printStackTrace(); // Log the exception
-			return false; // Upload failed
+			e.printStackTrace();
+			return false;
 		}
-	}
-	
-	public String getSavePath(String saveFolder) {
-		return "C:/Users/acer/eclipse-workspace/Musemo/src/main/webapp/resources/images"+saveFolder+"/";
 	}
 }

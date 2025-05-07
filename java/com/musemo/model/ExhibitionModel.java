@@ -1,9 +1,9 @@
 package com.musemo.model;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class ExhibitionModel {
-	private String exhibitionId;
+	private int exhibitionId;
 	private String exhibitionTitle;
 	private String exhibitionDescription;
 	private Date startDate;
@@ -14,7 +14,7 @@ public class ExhibitionModel {
 		super();
 	}
 
-	public ExhibitionModel(String exhibitionId, String exhibitionTitle, String exhibitionDescription, Date startDate,
+	public ExhibitionModel(int exhibitionId, String exhibitionTitle, String exhibitionDescription, Date startDate,
 			Date endDate, String exhibitionImage) {
 		super();
 		this.exhibitionId = exhibitionId;
@@ -35,11 +35,11 @@ public class ExhibitionModel {
 		this.exhibitionImage = exhibitionImage;
 	}
 
-	public String getExhibitionId() {
+	public int getExhibitionId() {
 		return exhibitionId;
 	}
 
-	public void setExhibitionId(String exhibitionId) {
+	public void setExhibitionId(int exhibitionId) {
 		this.exhibitionId = exhibitionId;
 	}
 

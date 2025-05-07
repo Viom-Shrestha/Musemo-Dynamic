@@ -25,7 +25,7 @@ public class ExhibitionDetailsService {
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next()) {
                     exhibition = new ExhibitionModel();
-                    exhibition.setExhibitionId(rs.getString("exhibitionId"));
+                    exhibition.setExhibitionId(rs.getInt("exhibitionId"));
                     exhibition.setExhibitionTitle(rs.getString("exhibitionTitle"));
                     exhibition.setExhibitionDescription(rs.getString("exhibitionDescription"));
                     exhibition.setStartDate(rs.getDate("startDate"));
