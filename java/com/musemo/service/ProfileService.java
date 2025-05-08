@@ -14,155 +14,172 @@ import java.sql.SQLException;
  */
 public class ProfileService {
 
-    private Connection dbConn;
-    private boolean isConnectionError = false;
+	private Connection dbConn;
+	private boolean isConnectionError = false;
 
-    /**
-     * Constructor initializes the database connection.
-     */
-    public ProfileService() {
-        try {
-            dbConn = DbConfig.getDbConnection();
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-            isConnectionError = true;
-        }
-    }
+	/**
+	 * Constructor initializes the database connection.
+	 */
+	public ProfileService() {
+		try {
+			dbConn = DbConfig.getDbConnection();
+		} catch (SQLException | ClassNotFoundException ex) {
+			ex.printStackTrace();
+			isConnectionError = true;
+		}
+	}
 
-    /**
-     * Retrieves user details based on username.
-     *
-     * @param username the username
-     * @return UserModel object or null if not found / connection error
-     */
-    public UserModel getUserByUsername(String username) {
-        if (isConnectionError) {
-            System.out.println("Connection Error!");
-            return null;
-        }
+	/**
+	 * Retrieves user details based on username.
+	 *
+	 * @param username the username
+	 * @return UserModel object or null if not found / connection error
+	 */
+	public UserModel getUserByUsername(String username) {
+		if (isConnectionError) {
+			System.out.println("Connection Error!");
+			return null;
+		}
 
-        UserModel user = null;
-        // ✅ Include the userImage column in the SELECT query
-        String sql = "SELECT username, fullName, password, gender, email, dateOfBirth, contact, userImage FROM user WHERE username = ?";
-        try (PreparedStatement ps = dbConn.prepareStatement(sql)) {
-            ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                user = new UserModel();
-                user.setUsername(rs.getString("username"));
-                user.setFullName(rs.getString("fullName"));
-                user.setPassword(rs.getString("password"));
-                user.setGender(rs.getString("gender"));
-                user.setEmail(rs.getString("email"));
-                java.sql.Date sqlDate = rs.getDate("dateOfBirth");
-                if (sqlDate != null) {
-                    user.setDateOfBirth(sqlDate.toLocalDate());
-                }
-                user.setContact(rs.getString("contact"));
-                // ✅ Retrieve the userImage from the ResultSet
-                user.setUserImage(rs.getString("userImage"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return user;
-    }
+		UserModel user = null;
+		// ✅ Include the userImage column in the SELECT query
+		String sql = "SELECT username, fullName, password, gender, email, dateOfBirth, contact, userImage FROM user WHERE username = ?";
+		try (PreparedStatement ps = dbConn.prepareStatement(sql)) {
+			ps.setString(1, username);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				user = new UserModel();
+				user.setUsername(rs.getString("username"));
+				user.setFullName(rs.getString("fullName"));
+				user.setPassword(rs.getString("password"));
+				user.setGender(rs.getString("gender"));
+				user.setEmail(rs.getString("email"));
+				java.sql.Date sqlDate = rs.getDate("dateOfBirth");
+				if (sqlDate != null) {
+					user.setDateOfBirth(sqlDate.toLocalDate());
+				}
+				user.setContact(rs.getString("contact"));
+				// ✅ Retrieve the userImage from the ResultSet
+				user.setUserImage(rs.getString("userImage"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return user;
+	}
 
-    /**
-     * Retrieves the total number of bookings for the user.
-     *
-     * @param username the username
-     * @return total bookings count
-     */
-    public int getTotalBookings(String username) {
-        if (isConnectionError) {
-            System.out.println("Connection Error!");
-            return 0;
-        }
+	/**
+	 * Retrieves the total number of bookings for the user.
+	 *
+	 * @param username the username
+	 * @return total bookings count
+	 */
+	public int getTotalBookings(String username) {
+		if (isConnectionError) {
+			System.out.println("Connection Error!");
+			return 0;
+		}
 
-        int totalBookings = 0;
-        String sql = "SELECT COUNT(*) FROM booking WHERE username = ?";
-        try (PreparedStatement ps = dbConn.prepareStatement(sql)) {
-            ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                totalBookings = rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return totalBookings;
-    }
+		int totalBookings = 0;
+		String sql = "SELECT COUNT(*) FROM booking WHERE username = ?";
+		try (PreparedStatement ps = dbConn.prepareStatement(sql)) {
+			ps.setString(1, username);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				totalBookings = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return totalBookings;
+	}
 
-    /**
-     * Retrieves the number of distinct exhibitions visited by the user.
-     *
-     * @param username the username
-     * @return count of exhibitions visited
-     */
-    public int getExhibitionsVisited(String username) {
-        if (isConnectionError) {
-            System.out.println("Connection Error!");
-            return 0;
-        }
+	/**
+	 * Retrieves the number of distinct exhibitions visited by the user.
+	 *
+	 * @param username the username
+	 * @return count of exhibitions visited
+	 */
+	public int getExhibitionsVisited(String username) {
+		if (isConnectionError) {
+			System.out.println("Connection Error!");
+			return 0;
+		}
 
-        int exhibitionsVisited = 0;
-        String sql = "SELECT COUNT(DISTINCT exhibitionId) FROM booking WHERE username = ?";
-        try (PreparedStatement ps = dbConn.prepareStatement(sql)) {
-            ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                exhibitionsVisited = rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return exhibitionsVisited;
-    }
+		int exhibitionsVisited = 0;
+		String sql = "SELECT COUNT(DISTINCT exhibitionId) FROM booking WHERE username = ?";
+		try (PreparedStatement ps = dbConn.prepareStatement(sql)) {
+			ps.setString(1, username);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				exhibitionsVisited = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return exhibitionsVisited;
+	}
 
-    /**
-     * Updates the user profile information.
-     *
-     * @param user the updated UserModel object
-     */
-    public void updateUser(UserModel user) {
-        if (isConnectionError) {
-            System.out.println("Connection Error!");
-            return;
-        }
+	/**
+	 * Updates the user profile information.
+	 *
+	 * @param user the updated UserModel object
+	 */
+	public void updateUser(UserModel user) {
+		if (isConnectionError) {
+			System.out.println("Connection Error!");
+			return;
+		}
 
-        String sql = "UPDATE user SET fullName = ?, password = ?, gender = ?, email = ?, dateOfBirth = ?, contact = ?, userImage = ? WHERE username = ?";
-        try (PreparedStatement ps = dbConn.prepareStatement(sql)) {
-            ps.setString(1, user.getFullName());
+		String sql = "UPDATE user SET fullName = ?, password = ?, gender = ?, email = ?, dateOfBirth = ?, contact = ?, userImage = ? WHERE username = ?";
+		try (PreparedStatement ps = dbConn.prepareStatement(sql)) {
+			ps.setString(1, user.getFullName());
 
-            // Only update password if a new one is provided
-            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-                String encryptedPassword = PasswordUtil.encrypt(user.getUsername(), user.getPassword());
-                ps.setString(2, encryptedPassword);
-            } else {
-                UserModel existingUser = getUserByUsername(user.getUsername());
-                if (existingUser != null) {
-                    ps.setString(2, existingUser.getPassword());
-                } else {
-                    System.err.println("Warning: Existing user not found while updating password.");
-                    return;
-                }
-            }
-            ps.setString(3, user.getGender());
-            ps.setString(4, user.getEmail());
+			// Only update password if a new one is provided
+			if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+				String encryptedPassword = PasswordUtil.encrypt(user.getUsername(), user.getPassword());
+				ps.setString(2, encryptedPassword);
+			} else {
+				UserModel existingUser = getUserByUsername(user.getUsername());
+				if (existingUser != null) {
+					ps.setString(2, existingUser.getPassword());
+				} else {
+					System.err.println("Warning: Existing user not found while updating password.");
+					return;
+				}
+			}
+			ps.setString(3, user.getGender());
+			ps.setString(4, user.getEmail());
 
-            if (user.getDateOfBirth() != null) {
-                ps.setDate(5, java.sql.Date.valueOf(user.getDateOfBirth()));
-            } else {
-                ps.setDate(5, null);
-            }
-            ps.setString(6, user.getContact());
-            ps.setString(7, user.getUserImage());
-            ps.setString(8, user.getUsername());
+			if (user.getDateOfBirth() != null) {
+				ps.setDate(5, java.sql.Date.valueOf(user.getDateOfBirth()));
+			} else {
+				ps.setDate(5, null);
+			}
+			ps.setString(6, user.getContact());
+			ps.setString(7, user.getUserImage());
+			ps.setString(8, user.getUsername());
 
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public boolean deleteUser(String username) {
+		if (isConnectionError) {
+			System.out.println("Connection Error!");
+			return false;
+		}
+		String sql = "DELETE FROM user WHERE username = ?";
+		try (PreparedStatement stmt = dbConn.prepareStatement(sql)) {
+			stmt.setString(1, username);
+			int rowsAffected = stmt.executeUpdate();
+			return rowsAffected > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 }

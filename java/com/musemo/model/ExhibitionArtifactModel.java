@@ -2,14 +2,15 @@ package com.musemo.model;
 
 public class ExhibitionArtifactModel {
 	private int exhibitionId;
-	private int artifactId;
+	private String artifactId;
+	private String exhibitionTitle;
+	private String artifactName;
 
 	public ExhibitionArtifactModel() {
 		super();
 	}
 
-	public ExhibitionArtifactModel(int exhibitionId, int artifactId) {
-		super();
+	public ExhibitionArtifactModel(int exhibitionId, String artifactId) {
 		this.exhibitionId = exhibitionId;
 		this.artifactId = artifactId;
 	}
@@ -22,12 +23,28 @@ public class ExhibitionArtifactModel {
 		this.exhibitionId = exhibitionId;
 	}
 
-	public int getArtifactId() {
+	public String getArtifactId() {
 		return artifactId;
 	}
 
-	public void setArtifactId(int artifactId) {
+	public void setArtifactId(String artifactId) {
 		this.artifactId = artifactId;
+	}
+
+	public String getExhibitionTitle() {
+		return exhibitionTitle;
+	}
+
+	public void setExhibitionTitle(String exhibitionTitle) {
+		this.exhibitionTitle = exhibitionTitle;
+	}
+
+	public String getArtifactName() {
+		return artifactName;
+	}
+
+	public void setArtifactName(String artifactName) {
+		this.artifactName = artifactName;
 	}
 
 }

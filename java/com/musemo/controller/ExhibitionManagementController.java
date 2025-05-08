@@ -1,7 +1,10 @@
 package com.musemo.controller;
 
+import com.musemo.model.ArtifactModel;
+import com.musemo.model.ExhibitionArtifactModel;
 import com.musemo.model.ExhibitionModel;
 import com.musemo.service.ExhibitionManagementService;
+import com.musemo.service.ArtifactService;
 import com.musemo.util.ImageUtil;
 
 import jakarta.servlet.ServletException;
@@ -20,10 +23,12 @@ import java.util.List;
 )
 public class ExhibitionManagementController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private ExhibitionManagementService service;
+	private ExhibitionManagementService exhibitionService;
+	private ArtifactService artifactService;
 
 	public void init() {
-		service = new ExhibitionManagementService();
+		exhibitionService = new ExhibitionManagementService();
+		artifactService = new ArtifactService();
 	}
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -31,25 +36,41 @@ public class ExhibitionManagementController extends HttpServlet {
 		String searchBy = req.getParameter("searchBy");
 		String deleteId = req.getParameter("deleteId");
 		String editId = req.getParameter("editId");
+		String removeExhibitionId = req.getParameter("removeExhibitionId");
+		String removeArtifactId = req.getParameter("removeArtifactId");
 
+		List<ExhibitionArtifactModel> relations = exhibitionService.getAllExhibitionArtifactRelations();
+		List<ArtifactModel> artifacts = artifactService.getAllArtifacts();
 		List<ExhibitionModel> exhibitions;
 		if (keyword != null && searchBy != null && !keyword.trim().isEmpty()) {
-			exhibitions = service.searchExhibitions(searchBy, keyword);
+			exhibitions = exhibitionService.searchExhibitions(searchBy, keyword);
 		} else {
-			exhibitions = service.getAllExhibitions();
+			exhibitions = exhibitionService.getAllExhibitions();
 		}
 
 		if (deleteId != null) {
-			service.deleteExhibition(Integer.parseInt(deleteId));
+			exhibitionService.deleteExhibition(Integer.parseInt(deleteId));
 			resp.sendRedirect("exhibitionManagement");
 			return;
 		}
 
 		if (editId != null) {
-			ExhibitionModel exhibitionToEdit = service.getExhibitionById(Integer.parseInt(editId));
+			ExhibitionModel exhibitionToEdit = exhibitionService.getExhibitionById(Integer.parseInt(editId));
 			req.setAttribute("editExhibition", exhibitionToEdit);
 		}
 
+		if (removeExhibitionId != null && removeArtifactId != null && removeExhibitionId.matches("\\d+")) {
+
+			int exhibitionId = Integer.parseInt(removeExhibitionId);
+			String artifactId = removeArtifactId;
+			exhibitionService.removeArtifactFromExhibition(exhibitionId, artifactId);
+
+			resp.sendRedirect("exhibitionManagement");
+			return;
+		}
+		
+		req.setAttribute("relations", relations);
+		req.setAttribute("artifacts", artifacts);
 		req.setAttribute("exhibitions", exhibitions);
 		req.getRequestDispatcher("WEB-INF/pages/exhibitionManagement.jsp").forward(req, resp);
 	}
@@ -58,11 +79,44 @@ public class ExhibitionManagementController extends HttpServlet {
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 
-		int exhibitionId = Integer.parseInt(request.getParameter("exhibitionId"));
+		String idParam = request.getParameter("exhibitionId");
+
+		// Validate that the ID is numeric
+		if (idParam == null || !idParam.matches("\\d+")) {
+			request.setAttribute("error", "Exhibition ID must be a numeric value.");
+			doGet(request, response);
+			return;
+		}
+
+		int exhibitionId = Integer.parseInt(idParam);
 		String exhibitionTitle = request.getParameter("exhibitionTitle");
 		String exhibitionDescription = request.getParameter("exhibitionDescription");
+
+		String action = request.getParameter("action");
+
+		if ("assign".equals(action)) {
+			String artifactId = request.getParameter("artifactId");
+
+			boolean exists = exhibitionService.relationExists(exhibitionId, artifactId);
+			if (!exists) {
+				exhibitionService.addArtifactToExhibition(exhibitionId, artifactId);
+				request.setAttribute("success", "Artifact assigned successfully.");
+			} else {
+				request.setAttribute("error", "This artifact is already assigned to this exhibition.");
+			}
+			doGet(request, response);
+			return;
+		}
+
 		Date startDate = Date.valueOf(request.getParameter("startDate"));
 		Date endDate = Date.valueOf(request.getParameter("endDate"));
+
+		// Validate that startDate is not after endDate
+		if (startDate.after(endDate)) {
+			request.setAttribute("error", "Start date cannot be after end date.");
+			doGet(request, response);
+			return;
+		}
 
 		Part exhibitionImagePart = request.getPart("exhibitionImage");
 		String exhibitionImageFileName = null;
@@ -80,7 +134,7 @@ public class ExhibitionManagementController extends HttpServlet {
 				return;
 			}
 		} else {
-			ExhibitionModel existing = service.getExhibitionById(exhibitionId);
+			ExhibitionModel existing = exhibitionService.getExhibitionById(exhibitionId);
 			if (existing != null) {
 				exhibitionImageFileName = existing.getExhibitionImage();
 			}
@@ -89,12 +143,27 @@ public class ExhibitionManagementController extends HttpServlet {
 		ExhibitionModel exhibition = new ExhibitionModel(exhibitionId, exhibitionTitle, exhibitionDescription,
 				startDate, endDate, exhibitionImageFileName);
 
-		if (service.getExhibitionById(exhibitionId) != null) {
-			service.updateExhibition(exhibition);
-		} else {
-			service.addExhibition(exhibition);
+		if ("update".equals(action)) {
+			if (exhibitionService.getExhibitionById(exhibitionId) != null) {
+				exhibitionService.updateExhibition(exhibition);
+				request.setAttribute("success", "Exhibition updated successfully.");
+			} else {
+				request.setAttribute("error", "Exhibition not found for update.");
+				doGet(request, response);
+				return;
+			}
+		} else if ("add".equals(action)) {
+			if (exhibitionService.getExhibitionById(exhibitionId) == null) {
+				exhibitionService.addExhibition(exhibition);
+				request.setAttribute("success", "Exhibition added successfully.");
+			} else {
+				request.setAttribute("error", "Exhibition with this ID already exists.");
+				doGet(request, response);
+				return;
+			}
 		}
 
 		response.sendRedirect("exhibitionManagement");
 	}
+
 }

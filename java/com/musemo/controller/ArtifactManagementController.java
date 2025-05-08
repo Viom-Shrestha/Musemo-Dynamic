@@ -79,6 +79,8 @@ public class ArtifactManagementController extends HttpServlet {
 		String origin = request.getParameter("origin");
 		String condition = request.getParameter("condition");
 		String description = request.getParameter("description");
+		String action = request.getParameter("action"); // either "add" or "update"
+		System.out.println("Action = " + action); // DEBUG
 
 		ImageUtil imageUtil = new ImageUtil();
 		Part artifactImagePart = request.getPart("artifactImage"); // Get the artifact image part from the request
@@ -96,7 +98,6 @@ public class ArtifactManagementController extends HttpServlet {
 			// Define the upload path for the image (assuming "artifact" folder)
 			String uploadPath = request.getServletContext().getRealPath("/") + "resources/images/artifact";
 
-			
 			System.out.println("Resolved upload path: " + uploadPath);
 			System.out.println("Final path: " + uploadPath + "/" + artifactImageFileName);
 
@@ -126,10 +127,27 @@ public class ArtifactManagementController extends HttpServlet {
 				origin, condition, description, artifactImageFileName);
 
 		// Check if the artifact exists to decide whether to add or update
-		if (service.getArtifactById(artifactID) != null) {
-			service.updateArtifact(artifact);
-		} else {
-			service.addArtifact(artifact);
+		if ("update".equals(action)) {
+			// Only update if the artifact exists
+			if (service.getArtifactById(artifactID) != null) {
+				service.updateArtifact(artifact);
+				request.setAttribute("success", "Artifact updated sucessfully.");
+			} else {
+				// Optionally handle "update" for non-existing artifact (edge case)
+				request.setAttribute("error", "Artifact not found for update.");
+				doGet(request, response);
+				return;
+			}
+		} else if ("add".equals(action)) {
+			// Only add if the artifact does not already exist
+			if (service.getArtifactById(artifactID) == null) {
+				service.addArtifact(artifact);
+				request.setAttribute("success", "Artifact added sucessfully.");
+			} else {
+				request.setAttribute("error", "Artifact with this ID already exists.");
+				doGet(request, response);
+				return;
+			}
 		}
 
 		response.sendRedirect("artifactManagement");

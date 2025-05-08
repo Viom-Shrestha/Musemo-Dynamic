@@ -34,13 +34,30 @@ public class ProfileController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
+
 		if (session != null) {
 			String loggedInUsername = (String) session.getAttribute("username");
+
 			if (loggedInUsername == null) {
 				response.sendRedirect(request.getContextPath() + "/login");
 				return;
 			}
 
+			// Check for delete action
+			String action = request.getParameter("action");
+			if ("delete".equals(action)) {
+				boolean deleted = profileService.deleteUser(loggedInUsername);
+				if (deleted) {
+					session.invalidate(); // log out the user
+					response.sendRedirect("login");
+				} else {
+					request.setAttribute("error", "Failed to delete account.");
+					response.sendRedirect("profile");
+				}
+				return;
+			}
+
+			// Default: load profile
 			UserModel user = profileService.getUserByUsername(loggedInUsername);
 			if (user == null) {
 				response.sendRedirect(request.getContextPath() + "/login");
@@ -131,7 +148,8 @@ public class ProfileController extends HttpServlet {
 			String uploadPath = request.getServletContext().getRealPath("/") + "resources/imagesuser";
 			System.out.println("Resolved upload path: " + uploadPath);
 
-			boolean uploaded = imageUtil.uploadImage(profilePhotoPart, uploadPath, imageUtil.getImageNameFromPart(profilePhotoPart));
+			boolean uploaded = imageUtil.uploadImage(profilePhotoPart, uploadPath,
+					imageUtil.getImageNameFromPart(profilePhotoPart));
 
 			if (!uploaded) {
 				System.out.println("Image upload failed.");
@@ -148,7 +166,6 @@ public class ProfileController extends HttpServlet {
 				doGet(request, response);
 			}
 
-			
 		} else {
 			System.out.println("No new profile photo provided. Retaining existing image.");
 			UserModel existingUser = profileService.getUserByUsername(username);
@@ -162,9 +179,8 @@ public class ProfileController extends HttpServlet {
 		profileService.updateUser(user);
 		System.out.println("User profile updated successfully.");
 
-
 		// Update in DB
-		
+
 	}
 
 	private String validateProfileForm(HttpServletRequest req) {
