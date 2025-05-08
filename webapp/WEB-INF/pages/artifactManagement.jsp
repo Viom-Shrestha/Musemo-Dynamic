@@ -118,6 +118,15 @@
 			</tbody>
 		</table>
 
+		<div class="form-messages">
+			<c:if test="${not empty error}">
+				<p class="error-message">${error}</p>
+			</c:if>
+			<c:if test="${not empty success}">
+				<p class="success-message">${success}</p>
+			</c:if>
+		</div>
+
 		<!-- Artifact Form Container -->
 		<div class="form-container">
 			<h2>${editArtifact != null ? "Update Artifact" : "Add New Artifact"}</h2>
@@ -139,16 +148,26 @@
 				</div>
 
 				<div class="form-group">
-					<label for="artifactType">Artifact Type</label> <input type="text"
-						id="artifactType" name="artifactType"
-						value="${editArtifact.artifactType}" required>
+					<label for="creatorName">Creator Name</label> <input type="text"
+						id="creatorName" name="creatorName"
+						value="${editArtifact.creatorName}" required>
+
 				</div>
 
 				<div class="form-row">
 					<div class="form-group">
-						<label for="creatorName">Creator Name</label> <input type="text"
-							id="creatorName" name="creatorName"
-							value="${editArtifact.creatorName}" required>
+						<label for="artifactType">Artifact Type</label> <select
+							id="artifactType" name="artifactType" required>
+							<option value="">-- Select Type --</option>
+							<option value="Sculpture"
+								${editArtifact.artifactType == 'Sculpture' ? 'selected' : ''}>Sculpture</option>
+							<option value="Painting"
+								${editArtifact.artifactType == 'Painting' ? 'selected' : ''}>Painting</option>
+							<option value="Relic"
+								${editArtifact.artifactType == 'Relic' ? 'selected' : ''}>Relic</option>
+							<option value="Clothing"
+								${editArtifact.artifactType == 'Clothing' ? 'selected' : ''}>Clothing</option>
+						</select>
 					</div>
 					<div class="form-group">
 						<label for="timePeriod">Time Period</label> <input type="text"
@@ -163,9 +182,18 @@
 							name="origin" value="${editArtifact.origin}" required>
 					</div>
 					<div class="form-group">
-						<label for="condition">Condition</label> <input type="text"
-							id="condition" name="condition" value="${editArtifact.condition}"
-							required>
+						<label for="condition">Condition</label> <select id="condition"
+							name="condition" required>
+							<option value="">-- Select Condition --</option>
+							<option value="Excellent"
+								${editArtifact.condition == 'Excellent' ? 'selected' : ''}>Excellent</option>
+							<option value="Good"
+								${editArtifact.condition == 'Good' ? 'selected' : ''}>Good</option>
+							<option value="Bad"
+								${editArtifact.condition == 'Bad' ? 'selected' : ''}>Bad</option>
+							<option value="Damaged"
+								${editArtifact.condition == 'Damaged' ? 'selected' : ''}>Damaged</option>
+						</select>
 					</div>
 				</div>
 
@@ -181,19 +209,21 @@
 						accept="image/*"
 						<c:if test="${editArtifact == null}">required</c:if>>
 				</div>
-				
+
 				<div class="form-buttons">
 					<c:choose>
 						<c:when test="${editArtifact != null}">
-							<button type="submit" class="update-button">Update
-								Artifact</button>
+							<button type="submit" name="action" value="update"
+								class="update-button">Update Artifact</button>
 							<a href="${contextPath}/artifactManagement" class="cancel-button">Cancel
 								Update</a>
 						</c:when>
 						<c:otherwise>
-							<button type="submit" class="add-button">Add Artifact</button>
+							<button type="submit" name="action" value="add"
+								class="add-button">Add Artifact</button>
 						</c:otherwise>
 					</c:choose>
+
 					<button type="reset" class="clear-button">Clear</button>
 				</div>
 			</form>

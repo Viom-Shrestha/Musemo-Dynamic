@@ -71,9 +71,9 @@
 					<th>ID</th>
 					<th>Title</th>
 					<th>Description</th>
-					<th style="width:100px;">Start Date</th>
-					<th style="width:100px;">End Date</th>
-					<th style="width:80px;">Actions</th>
+					<th style="width: 100px;">Start Date</th>
+					<th style="width: 100px;">End Date</th>
+					<th style="width: 80px;">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -105,6 +105,15 @@
 				</c:forEach>
 			</tbody>
 		</table>
+
+		<div class="form-messages">
+			<c:if test="${not empty error}">
+				<p class="error-message">${error}</p>
+			</c:if>
+			<c:if test="${not empty success}">
+				<p class="success-message">${success}</p>
+			</c:if>
+		</div>
 
 		<!-- Exhibition Form -->
 		<div class="form-container">
@@ -158,19 +167,71 @@
 				<div class="form-buttons">
 					<c:choose>
 						<c:when test="${editExhibition != null}">
-							<button type="submit" class="update-button">Update
-								Exhibition</button>
+							<button type="submit" name="action" value="update"
+								class="update-button">Update Exhibition</button>
 							<a href="${contextPath}/exhibitionManagement"
 								class="cancel-button">Cancel Update</a>
 						</c:when>
 						<c:otherwise>
-							<button type="submit" class="add-button">Add Exhibition</button>
+							<button type="submit" name="action" value="add"
+								class="add-button">Add Exhibition</button>
 						</c:otherwise>
 					</c:choose>
 					<button type="reset" class="clear-button">Clear</button>
 				</div>
 			</form>
 		</div>
+
+		<!-- exhibition artifact section -->
+		<div class="relation-section">
+			<h3>Assigned Artifacts to Exhibitions</h3>
+			<table class="relation-table">
+				<thead>
+					<tr>
+						<th>Exhibition</th>
+						<th>Artifact</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach var="rel" items="${relations}">
+						<tr>
+							<td>${rel.exhibitionTitle}</td>
+							<td>${rel.artifactName}</td>
+							<td><a
+								href="exhibitionManagement?removeExhibitionId=${rel.exhibitionId}&removeArtifactId=${rel.artifactId}"
+								class="table-delete-btn"
+								onclick="return confirm('Remove this artifact from the exhibition?');"
+								class="fa-solid fa-trash">Remove</a>
+							</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+
+			<h3>Assign Artifact to Exhibition</h3>
+			<form action="exhibitionManagement" method="post"
+				class="relation-form">
+				<input type="hidden" name="action" value="assign" /> <label
+					for="exhibitionId">Exhibition:</label> <select name="exhibitionId"
+					required>
+					<option value="">Select Exhibition</option>
+					<c:forEach var="exhibition" items="${exhibitions}">
+						<option value="${exhibition.exhibitionId}">${exhibition.exhibitionTitle}</option>
+					</c:forEach>
+				</select> <label for="artifactId">Artifact:</label> <select name="artifactId"
+					required>
+					<option value="">Select Artifact</option>
+					<c:forEach var="artifact" items="${artifacts}">
+						<option value="${artifact.artifactID}">${artifact.artifactName}</option>
+					</c:forEach>
+				</select>
+
+				<button type="submit">Assign</button>
+			</form>
+		</div>
+
+
 	</div>
 </body>
 </html>

@@ -120,11 +120,22 @@
 					<button type="button" class="btn btn-cancel"
 						onclick="window.location.href='${contextPath}/home';">Cancel</button>
 					<button type="submit" class="btn btn-save">Save Changes</button>
+					<button type="button" class="btn btn-delete"
+						onclick="confirmDelete()">Delete Account</button>
+
 				</div>
 			</form>
 		</div>
 	</div>
 	<jsp:include page="footer.jsp" />
+	<script>
+		function confirmDelete() {
+			if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+				window.location.href = "${contextPath}/profile?action=delete";
+			}
+		}
+	</script>
+
 </body>
 
 </html>

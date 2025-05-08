@@ -51,7 +51,7 @@ body {
 /* Placeholder for the artifact image (while loading or if no image) */
 .image-placeholder {
     background-color: #e0f2f7; /* Very light teal */
-    width: 100%;
+    width: 500px;
     aspect-ratio: 1; /* Maintains a 1:1 aspect ratio (square) */
     display: flex;
     align-items: center;
@@ -60,9 +60,15 @@ body {
     font-size: 1.2rem; /* Slightly larger placeholder text */
 }
 
+.image-placeholder img {
+    width: 500px;
+	height: auto;
+	object-fit: cover;
+	border-radius: 6px;
+}
+
 /* Styling for the details section of the artifact */
 .artifact-details {
-    flex: 0 0 60%; /* Takes up 60% of the container width */
     padding: 1.5rem; /* Slightly reduced padding */
     display: flex;
     flex-direction: column; /* Arranges content vertically */
