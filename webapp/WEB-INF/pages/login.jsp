@@ -39,13 +39,13 @@
 				<div class="form-group">
 					<label class="form-label">User-Name:</label> <input type="text"
 						name="username" class="form-input"
-						placeholder="Enter your username">
+						placeholder="Enter your username" required>
 				</div>
 
 				<div class="form-group" style="position: relative;">
 					<label class="form-label">Password:</label> <input type="password"
 						id="password" name="password" class="form-input"
-						placeholder="Enter your password">
+						placeholder="Enter your password" required>
 					<button type="button" class="password-toggle"
 						onclick="togglePassword()"
 						style="position: absolute; right: 10px; top: 40px; background: none; border: none; cursor: pointer;">

@@ -80,7 +80,7 @@
 					<th>Time Period</th>
 					<th>Origin</th>
 					<th>Condition</th>
-					<th>Description</th>
+					<th style="width: 400px;">Description</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -89,7 +89,7 @@
 					<tr>
 						<td class="image-cell"><img
 							src="${contextPath}/resources/images/artifact/${artifact.artifactImage}"
-							alt="Artifact Image" class="user-image"></td>
+							alt="Artifact Image"></td>
 						<td>${artifact.artifactID}</td>
 						<td>${artifact.artifactName}</td>
 						<td>${artifact.artifactType}</td>

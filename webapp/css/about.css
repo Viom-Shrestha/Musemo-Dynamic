@@ -249,3 +249,48 @@ body {
 		font-size: 2rem;
 	}
 }
+@media (max-width: 576px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+  .hero p {
+    font-size: 1rem;
+  }
+  .section-title {
+    font-size: 1.8rem;
+    margin-bottom: 40px;
+  }
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+  .about-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+  }
+  .vm-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+  .founder-content h3 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+  }
+  .founder-content h4 {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+  }
+  .purpose h3 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+  .purpose p {
+    font-size: 1.1rem;
+  }
+  .container {
+    padding: 0 15px;
+  }
+  .cta-button {
+    padding: 10px 25px;
+    font-size: 0.9rem;
+  }
+}

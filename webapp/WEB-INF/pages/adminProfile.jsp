@@ -53,6 +53,16 @@
 				<div class="profile-details">
 					<h2 class="profile-header">Admin Information</h2>
 
+					<div class="form-messages">
+						<c:if test="${not empty error}">
+							<p class="error-message">${error}</p>
+						</c:if>
+						<c:if test="${not empty success}">
+							<p class="success-message">${success}</p>
+						</c:if>
+					</div>
+
+
 					<form action="${contextPath}/adminProfile" method="post">
 						<div class="form-group">
 							<label for="fullName" class="form-label">Full Name:</label> <input
@@ -67,6 +77,18 @@
 						</div>
 
 						<div class="form-group">
+							<label for="email" class="form-label">Email:</label> <input
+								type="email" id="email" name="email" class="form-input"
+								placeholder="Email" value="${admin.email}">
+						</div>
+
+						<div class="form-group">
+							<label for="contact" class="form-label">Contact:</label> <input
+								type="tel" id="contact" name="contact" class="form-input"
+								placeholder="Contact Number" value="${admin.contact}">
+						</div>
+
+						<div class="form-group">
 							<label for="password" class="form-label">Password:</label> <input
 								type="password" id="password" name="password" class="form-input"
 								placeholder="Enter new password (leave blank to keep current)">
@@ -77,6 +99,7 @@
 							<button type="submit" class="btn btn-save">Save Changes</button>
 						</div>
 					</form>
+
 				</div>
 
 

@@ -71,8 +71,8 @@
 					<th>ID</th>
 					<th>Title</th>
 					<th>Description</th>
-					<th style="width: 100px;">Start Date</th>
-					<th style="width: 100px;">End Date</th>
+					<th style="width: 140px;">Start Date</th>
+					<th style="width: 140px;">End Date</th>
 					<th style="width: 80px;">Actions</th>
 				</tr>
 			</thead>

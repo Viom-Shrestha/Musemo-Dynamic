@@ -1,32 +1,27 @@
 @charset "UTF-8";
 
-/* Basic resets and font */
+/* Base Styles and Typography */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Open Sans', sans-serif;
-    /* More readable and modern font */
+    font-family: 'Poppins', 'Open Sans', sans-serif;
 }
 
 body {
-    background-color: #003955;
-    color: white;
+    background-color: #002940;
+    color: #f8f9fa;
+    line-height: 1.6;
 }
 
-/* Hero Section */
+/* Hero Section Enhancement */
 .hero {
-    padding: 100px 0;
-    /* Increased padding for more visual space */
+    padding: 180px 0 140px;
     position: relative;
     background-size: cover;
-    /* Changed to cover to maintain aspect ratio and cover container */
-    background-repeat: no-repeat;
     background-position: center;
-    /* Centers the background image */
     overflow: hidden;
     color: white;
-    /* Ensure text is white against potentially darker image */
 }
 
 .hero::before {
@@ -36,348 +31,460 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    /* Subtle dark overlay for better text contrast */
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 41, 64, 0.9));
     z-index: 0;
 }
 
 .hero-content {
     text-align: center;
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
     position: relative;
     z-index: 1;
-    /* Ensures content is above the overlay */
+    padding: 0 20px;
 }
 
-h1 {
-    font-size: 4rem;
-    /* Larger and more impactful title */
-    margin-bottom: 15px;
-    font-weight: 700;
-    /* Make the title bolder */
+.hero h1 {
+    font-size: 5rem;
+    margin-bottom: 10px;
+    font-weight: 800;
     letter-spacing: -1px;
-    /* Slightly tighter letter spacing for a modern look */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(45deg, #fff, #ffcc00);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
 }
 
-h2 {
-    font-size: 1.8rem;
-    /* Slightly larger subtitle */
+.hero h2 {
+    font-size: 1.4rem;
     margin-bottom: 30px;
-    letter-spacing: 3px;
-    /* More pronounced letter spacing for emphasis */
-    font-weight: 400;
-    /* Slightly lighter than the title */
-    color: rgba(255, 255, 255, 0.8);
-    /* Softer white for contrast */
+    letter-spacing: 8px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.9);
+    text-transform: uppercase;
+    position: relative;
+    display: inline-block;
+}
+
+.hero h2::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 2px;
+    background-color: #ffcc00;
+    margin: 15px auto 0;
 }
 
 .hero-text {
-    font-size: 1.6rem;
-    /* Slightly larger body text */
-    margin: 30px auto;
-    /* Center the text block */
-    max-width: 600px;
-    /* Wider text block for better readability */
+    font-size: 1.8rem;
+    margin: 40px auto;
+    max-width: 700px;
     text-align: center;
-    /* Center the text */
-    line-height: 1.6;
-    /* Improved line height for readability */
+    line-height: 1.4;
     font-weight: 300;
-    /* Lighter font weight for body text */
+    color: rgba(255, 255, 255, 0.85);
 }
 
 .btn {
     display: inline-block;
-    background-color: #ffc107;
-    /* Slightly more vibrant yellow */
-    color: #212529;
-    /* Darker text for better contrast on yellow */
-    padding: 14px 30px;
-    /* Slightly larger button */
-    border-radius: 8px;
-    /* More rounded corners */
+    background-color: #ffcc00;
+    color: #002940;
+    padding: 16px 40px;
+    border-radius: 50px;
     text-decoration: none;
     font-weight: 600;
-    /* Semi-bold button text */
-    margin: 30px 0;
-    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
-    /* Smoother transitions */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    /* Subtle shadow for depth */
+    font-size: 1.1rem;
+    margin: 40px 0;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 15px rgba(255, 204, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.5s;
 }
 
 .btn:hover {
-    background-color: #e0a800;
-    /* Darker yellow on hover */
+    background-color: #e6b800;
     transform: translateY(-3px);
-    /* Slightly more pronounced lift on hover */
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 25px rgba(255, 204, 0, 0.4);
 }
 
-/* Section Title (No changes requested) */
+.btn:hover::before {
+    left: 100%;
+}
+
+/* Section Titles */
 .section-title {
     text-align: center;
-    font-size: 2rem;
-    margin: 40px 0;
+    font-size: 2.5rem;
+    margin: 60px 0 40px;
+    position: relative;
+    color: #fff;
+    font-weight: 600;
 }
 
-/* Card Container (No changes requested) */
+.section-title::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(to right, #ffcc00, transparent);
+    margin: 20px auto 0;
+}
 
+/* Card Container & Exhibition Cards */
 .card-container {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     flex-wrap: wrap;
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width: 1400px;
+    margin: 0 auto 80px;
     padding: 0 20px;
+    gap: 30px;
 }
 
 .card {
-    background-color: #f5f5f5;
-    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
     overflow: hidden;
-    margin-bottom: 30px;
-    width: 300px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    width: 330px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    transition: all 0.4s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 .card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-15px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 204, 0, 0.3);
 }
 
 .card-img {
-    height: 200px;
-    background-color: #ddd;
+    height: 240px;
     overflow: hidden;
-    /* Ensure image doesn't spill out */
+    position: relative;
+}
+
+.card-img::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(to top, rgba(0, 41, 64, 1), transparent);
 }
 
 .card-img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* Make the image cover the container, potentially cropping */
+    transition: transform 0.5s ease;
+}
+
+.card:hover .card-img img {
+    transform: scale(1.1);
 }
 
 .card-content {
-    padding: 15px;
-    background-color: white;
-    color: #333;
+    padding: 25px 20px;
+    background: rgba(0, 41, 64, 0.95);
+    height: 200px;
 }
 
 .card-title {
-    font-size: 1.2rem;
-    margin-bottom: 5px;
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+    color: #ffcc00;
+    font-weight: 600;
 }
 
 .card-subtitle {
-    color: #666;
-    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    line-height: 1.5;
 }
 
-/* Plan Section  */
-.plan-section {
-    padding: 60px 0;
-    background-color: #00497c;
-    display: flex;
-    flex-wrap: wrap; /* Add this to make it responsive */
-    justify-content: space-between; /* */
-    margin: 0 auto;
-    padding: 40px 20px;
-}
-
-.plan-info {
-    max-width: 500px;
-    flex: 1; /* Allow it to take up available space */
-}
-
-.plan-title {
-    font-size: 2rem;
-    margin-bottom: 20px;
-}
-
-.plan-description {
-    margin-bottom: 20px;
-    line-height: 1.6;
-}
-
-.museum-details {
-    margin-top: 20px;
-}
-
-.detail-section {
-    margin-bottom: 20px;
-}
-
-.detail-section h4 {
-    color: #ffb800;
-    margin-bottom: 5px;
-}
-
-.map-img {
-    width: 100%; /* Make image responsive */
-    max-width: 500px; /* Ensure it doesn't get too big */
-    height: auto;  /* Maintain aspect ratio */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 20px; /* Add some margin above the image on small screens */
-}
-
-.map-img img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-}
-
-
-/* Stats Container (No changes requested) */
-.stats-container {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 0 20px;
-}
-
-.stat-card {
-    background-color: #f5f5f5;
-    padding: 20px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    width: 300px;
-    margin-bottom: 20px; /* Add margin for small screens */
-}
-
-.stat-img {
-    width: 50px;
-    height: 50px;
-    margin-right: 15px;
-    display: flex;
-    justify-content: center;
-}
-
-.stat-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain
-}
-
-.stat-content {
-    color: #333;
-}
-
-.stat-title {
-    font-weight: bold;
-}
-
-.stat-number {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #00497c;
-}
-
-/* Featured Artifacts Section (No changes requested) */
+/* Artifact Cards */
 .artifact-card {
-    background-color: #002c42;
-    border-radius: 5px;
+    background: linear-gradient(145deg, #003249, #001e2e);
+    border-radius: 12px;
     overflow: hidden;
-    margin-bottom: 30px;
-    width: 320px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 330px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    transition: all 0.4s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .artifact-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    border-color: #ffb800;
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
+    border-color: #ffcc00;
 }
 
 .artifact-img {
-    height: 220px;
+    height: 250px;
     background-color: #001b29;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-repeat: no-repeat;
-    background-position: center;
+    position: relative;
     overflow: hidden;
+}
+
+.artifact-img::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, transparent 60%, rgba(0, 0, 0, 0.6));
+    z-index: 1;
 }
 
 .artifact-img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.artifact-card:hover .artifact-img img {
+    transform: scale(1.1);
 }
 
 .artifact-content {
-    padding: 15px;
+    padding: 25px 20px;
+    position: relative;
 }
 
 .artifact-title {
-    font-size: 1.1rem;
-    margin-bottom: 5px;
-    color: #ffb800;
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+    color: #ffcc00;
+    font-weight: 600;
 }
 
 .artifact-period {
-    color: #ccc;
+    color: #8ecae6;
     font-size: 0.9rem;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    font-style: italic;
 }
 
 .artifact-description {
-    font-size: 0.9rem;
-    line-height: 1.4;
-    color: #f5f5f5;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.8);
 }
 
-/* Responsive Styling */
-@media (max-width: 992px) {
-    .plan-section {
-        flex-direction: column; /* Stack plan info and image on small screens */
-        align-items: center; /* Center the items horizontally */
-    }
-
-    .plan-info {
-        margin-bottom: 20px; /* Add space between plan info and image */
-    }
-
-    .map-img {
-        width: 100%;
-        max-width: 400px; /* Keep a max width if needed */
-    }
+/* Plan Your Visit Section */
+.plan-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #00497c, #003049);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 60px auto;
+    gap: 50px;
+    position: relative;
+    overflow: hidden;
 }
 
-@media (max-width: 768px) {
-    .main-nav {
-        display: none;
-    }
+.plan-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: 200px;
+    opacity: 0.05;
+    pointer-events: none;
+}
 
-    .hero-text {
-        margin-left: 0;
-        text-align: center;
-    }
+.plan-info {
+    max-width: 550px;
+    flex: 1;
+    padding: 0 30px;
+    position: relative;
+    z-index: 1;
+}
 
-    .footer-content {
-        flex-direction: column;
-        gap: 30px;
-    }
+.plan-title {
+    font-size: 2.8rem;
+    margin-bottom: 25px;
+    color: #fff;
+    position: relative;
+    display: inline-block;
+}
 
-    .form-container {
-        grid-template-columns: 1fr;
-    }
+.plan-title::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: #ffcc00;
+    margin-top: 15px;
+}
 
-    .form-group.full-width {
-        grid-column: span 1;
-    }
-    .buttons {
-        grid-column: span 1;
-    }
+.plan-description {
+    margin-bottom: 30px;
+    line-height: 1.8;
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.museum-details {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 30px;
+}
+
+.detail-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.detail-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 204, 0, 0.3);
+}
+
+.detail-section h4 {
+    color: #ffcc00;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    position: relative;
+    padding-bottom: 8px;
+}
+
+.detail-section h4::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 30px;
+    height: 2px;
+    background-color: #ffcc00;
+}
+
+.detail-section p {
+    margin-bottom: 5px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.map-img {
+    width: 100%;
+    max-width: 550px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 30px;
+}
+
+.map-img img {
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.4s ease;
+}
+
+.map-img img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 204, 0, 0.3);
+}
+
+/* Stats Container */
+.stats-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 1400px;
+    margin: 80px auto;
+    padding: 0 20px;
+    gap: 30px;
+}
+
+.stat-card {
+    background: linear-gradient(145deg, #003249, #001e2e);
+    padding: 25px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    width: 330px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 204, 0, 0.3);
+}
+
+.stat-img {
+    width: 60px;
+    height: 60px;
+    margin-right: 20px;
+    background-color: rgba(255, 204, 0, 0.1);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover .stat-img {
+    background-color: rgba(255, 204, 0, 0.2);
+    transform: scale(1.1);
+}
+
+.stat-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
+}
+
+.stat-content {
+    color: #fff;
+}
+
+.stat-title {
+    font-weight: 500;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 5px;
+}
+
+.stat-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #ffcc00;
+    text-shadow: 0 2px 10px rgba(255, 204, 0, 0.3);
 }

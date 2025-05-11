@@ -1,149 +1,314 @@
 @charset "UTF-8";
 
-/* Resetting default browser styles and setting a base font */
+/* ===== Base Styles ===== */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
 }
 
-/* Styling for the main body of the page */
 body {
-    background-color: #004055; /* Darker teal background */
-    color: white;
-    line-height: 1.6; /* Improves text readability */
+  background: linear-gradient(135deg, #004055 0%, #002535 100%);
+  color: #ffffff;
+  line-height: 1.6;
+  min-height: 100vh;
 }
 
-/* Style for the profile icon (if you have one) */
-.profile-icon {
-    background-color: #5fb9d4; /* Light teal */
-    color: white;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%; /* Makes it circular */
-}
-
-/* Container for the artifact details section */
+/* ===== Artifact Details Container ===== */
 .artifact-container {
-    display: flex;
-    max-width: 900px; /* Slightly reduced max-width for better responsiveness */
-    margin: 2rem auto; /* Adds top/bottom margin and centers the container */
-    background-color: #003345; /* Darker shade of teal */
-    border-radius: 8px;
-    overflow: hidden; /* Ensures rounded corners work properly */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow for depth */
+  display: flex;
+  max-width: 1200px;
+  margin: 3rem auto;
+  background-color: rgba(0, 38, 51, 0.7);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  position: relative;
 }
 
-/* Styling for the image area of the artifact */
+.artifact-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #5fb9d4, #20B2AA, #034f6e);
+  z-index: 1;
+}
+
+/* ===== Image Section ===== */
 .artifact-image {
-    flex: 0 0 40%; /* Takes up 40% of the container width */
-    background-color: #5fb9d4; /* Light teal */
-    padding: 1.5rem; /* Slightly reduced padding */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  flex: 0 0 45%;
+  background: linear-gradient(135deg, rgba(95, 185, 212, 0.1) 0%, rgba(3, 79, 110, 0.1) 100%);
+  padding: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Placeholder for the artifact image (while loading or if no image) */
+.artifact-image::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(95, 185, 212, 0.1) 0%, rgba(0, 51, 69, 0) 70%);
+  z-index: 0;
+}
+
 .image-placeholder {
-    background-color: #e0f2f7; /* Very light teal */
-    width: 500px;
-    aspect-ratio: 1; /* Maintains a 1:1 aspect ratio (square) */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #003345; /* Darker text color for placeholder */
-    font-size: 1.2rem; /* Slightly larger placeholder text */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  overflow: hidden;
+  transform: perspective(1000px) rotateY(0deg);
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.artifact-container:hover .image-placeholder {
+  transform: perspective(1000px) rotateY(-5deg);
 }
 
 .image-placeholder img {
-    width: 500px;
-	height: auto;
-	object-fit: cover;
-	border-radius: 6px;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.8s ease;
 }
 
-/* Styling for the details section of the artifact */
+.artifact-container:hover .image-placeholder img {
+  transform: scale(1.05);
+}
+
+/* ===== Details Section ===== */
 .artifact-details {
-    padding: 1.5rem; /* Slightly reduced padding */
-    display: flex;
-    flex-direction: column; /* Arranges content vertically */
+  flex: 1;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
 }
 
-/* Header within the artifact details section */
 .details-header {
-    background-color: #003345; /* Darker shade of teal */
-    padding: 1rem;
-    margin-bottom: 1rem; /* Adds space below the header */
-    border-radius: 6px; /* Slightly rounded corners */
+  margin-bottom: 2rem;
+  position: relative;
 }
 
 .details-header h2 {
-    margin: 0; /* Removes default heading margin */
-    font-size: 1.5rem; /* Slightly larger heading */
-    font-weight: bold;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  line-height: 1.3;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Grid layout for key artifact information */
 .details-info {
-    display: grid;
-    grid-template-columns: auto 1fr; /* Two columns, first auto-sized, second takes remaining space */
-    gap: 0.75rem; /* Increased gap for better readability */
-    margin-bottom: 1.5rem; /* Increased bottom margin */
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 1.2rem 1.5rem;
+  margin-bottom: 2rem;
+  background-color: rgba(0, 51, 69, 0.5);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
 }
 
-/* Labels for the artifact information */
+.details-info::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, #5fb9d4, #034f6e);
+}
+
 .info-label {
-    font-weight: bold;
-    color: #a7d9ed; /* Lighter text for labels */
+  font-weight: 600;
+  color: #5fb9d4;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
 }
 
-/* Styling for the artifact description */
+.details-info span:not(.info-label) {
+  color: #e0f2f7;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+}
+
+/* ===== Description Section ===== */
 .description {
-    background-color: #003345; /* Darker shade of teal */
-    padding: 1rem;
-    margin-bottom: 1.5rem; /* Increased bottom margin */
-    border-radius: 6px; /* Slightly rounded corners */
+  background-color: rgba(0, 51, 69, 0.5);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.description::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, #5fb9d4, #034f6e);
+}
+
+.description h3 {
+  font-size: 1.5rem;
+  color: #5fb9d4;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 .description p {
-    margin: 0; /* Removes default paragraph margin */
-    line-height: 1.7; /* Improves readability of the description */
+  color: #e0f2f7;
+  line-height: 1.8;
+  letter-spacing: 0.3px;
+  font-size: 1rem;
 }
 
-/* Styling for the current exhibition information */
-.current-exhibition {
-    background-color: #5fb9d4; /* Light teal */
-    color: #003345; /* Darker text color */
+/* ===== Visual Enhancements ===== */
+/* Decorative Elements */
+.artifact-container::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(95, 185, 212, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+/* Subtle Highlight Animation */
+@keyframes subtle-glow {
+  0%, 100% { box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); }
+  50% { box-shadow: 0 15px 35px rgba(32, 178, 170, 0.2); }
+}
+
+.artifact-container {
+  animation: subtle-glow 8s infinite;
+}
+
+/* Tablet breakpoint (max-width: 992px) */
+@media (max-width: 992px) {
+  .artifact-container {
+    flex-direction: column;
+    margin: 2rem 20px;
+  }
+
+  .artifact-image, .artifact-details {
+    flex: 0 0 100%;
+    width: 100%;
+    padding: 1.5rem;
+  }
+
+  .artifact-image {
+    padding-bottom: 0.5rem;
+  }
+
+  .artifact-details {
+    padding-top: 0.5rem;
+  }
+
+  .image-placeholder {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .artifact-container:hover .image-placeholder {
+    transform: perspective(1000px) rotateY(0deg); 
+  }
+
+  .details-info {
+    grid-template-columns: 110px 1fr;
+    gap: 1rem;
+    padding: 1rem 0;
+  }
+
+  .description {
+    padding: 1rem 0;
+  }
+
+  .description h3 {
+    font-size: 1.4rem;
+  }
+}
+
+/* Mobile breakpoint (max-width: 600px) -  */
+@media (max-width: 600px) {
+  .artifact-container {
+    margin: 1rem 10px;
+    border-radius: 12px;
+  }
+
+  .artifact-image, .artifact-details {
     padding: 1rem;
-    border-radius: 6px; /* Slightly rounded corners */
-    text-align: center; /* Centers the text within the box */
+  }
+
+  .details-info {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding: 0.8rem 0;
+  }
+
+  .info-label {
+    margin-top: 0.5rem;
+  }
+
+  .info-label:first-child {
+    margin-top: 0;
+  }
+
+  .details-info span:not(.info-label) {
+    padding-left: 0.3rem;
+  }
+
+  .description {
+    padding: 0.8rem 0;
+  }
+
+  .description h3 {
+    font-size: 1.2rem;
+  }
 }
 
-.current-exhibition p {
-    margin: 0; /* Removes default paragraph margin */
-    font-weight: bold;
+/* Page Load Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Media query for smaller screens to adjust layout */
-@media (max-width: 768px) {
-    .artifact-container {
-        flex-direction: column; /* Stack image and details vertically */
-    }
-
-    .artifact-image {
-        flex: 0 0 auto; /* Allows image to auto-size */
-        width: 100%; /* Image takes full width */
-        padding: 1rem;
-    }
-
-    .artifact-details {
-        flex: 0 0 auto; /* Allows details to auto-size */
-        width: 100%; /* Details take full width */
-        padding: 1rem;
-    }
+.artifact-container {
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
 }

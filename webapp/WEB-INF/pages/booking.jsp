@@ -26,7 +26,15 @@
 			<div class="booking-header">
 				<h2>Book your Visit Now</h2>
 			</div>
+			<!-- Show messages below button -->
+			<c:if test="${not empty error}">
+				<p class="form-message error-message">${error}</p>
+			</c:if>
+			<c:if test="${not empty success}">
+				<p class="form-message success-message">${success}</p>
+			</c:if>
 			<div class="booking-form">
+
 				<form id="visit-booking-form" action="${contextPath}/booking"
 					method="post">
 					<div class="form-row">
@@ -70,18 +78,18 @@
 							<div class="form-group">
 								<label>Ticket Selection</label>
 								<div class="radio-group">
-									<input type="radio" id="general" name="ticket-type"
-										value="General Ticket" checked> <label for="general">General
-										Ticket: Rs 200</label> <input type="radio" id="senior"
-										name="ticket-type" value="Senior Ticket"> <label for="senior">Senior
-										Ticket (65+): Rs 150</label> <input type="radio" id="student"
-										name="ticket-type" value="Student Ticket"> <label
-										for="student">Student Ticket: Rs 100</label> <input
-										type="radio" id="children" name="ticket-type" value="Children Ticket">
-									<label for="children">Children Ticket: Free</label>
+									<label><input type="radio" name="ticket-type"
+										value="General Ticket" checked> General Ticket: Rs 200</label>
+									<label><input type="radio" name="ticket-type"
+										value="Senior Ticket"> Senior Ticket (65+): Rs 150</label> <label><input
+										type="radio" name="ticket-type" value="Student Ticket">
+										Student Ticket: Rs 100</label> <label><input type="radio"
+										name="ticket-type" value="Children Ticket"> Children
+										Ticket: Free</label>
 								</div>
 							</div>
 						</div>
+
 					</div>
 
 					<div class="btn-container">

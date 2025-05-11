@@ -216,6 +216,34 @@
 			}
 		});
 	});
+	
+    console.log("=== Debugging Session and Cookie ===");
+
+    // Session attribute (set on login)
+    const sessionUsername = "${sessionScope.username}";
+    if (sessionUsername) {
+        console.log("Session Username:", sessionUsername);
+    } else {
+        console.log("Session Username: Not set");
+    }
+
+    // Cookie for role
+    const cookies = document.cookie.split(';');
+    let role = null;
+    cookies.forEach(cookie => {
+        const [name, value] = cookie.trim().split('=');
+        if (name === "role") {
+            role = value;
+        }
+    });
+
+    if (role) {
+        console.log("Cookie Role:", role);
+    } else {
+        console.log("Cookie Role: Not set");
+    }
+
+    console.log("All Cookies:", document.cookie);
 	</script>
 
 </body>
