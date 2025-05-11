@@ -166,6 +166,35 @@ public class ProfileService {
 		}
 	}
 
+	public String isUserInfoTaken(String username, String email, String contact) {
+		if (dbConn == null) {
+			return "Database connection not available.";
+		}
+
+		String query = "SELECT username, email, contact FROM user WHERE (email = ? OR contact = ?) AND username != ?";
+
+		try (PreparedStatement stmt = dbConn.prepareStatement(query)) {
+			stmt.setString(1, email);
+			stmt.setString(2, contact);
+			stmt.setString(3, username); // Exclude current user's record
+
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				if (email.equalsIgnoreCase(rs.getString("email"))) {
+					return "Email is already registered.";
+				} else if (contact.equals(rs.getString("contact"))) {
+					return "Contact number is already registered.";
+				}
+			}
+		} catch (SQLException e) {
+			System.err.println("Error checking user uniqueness: " + e.getMessage());
+			e.printStackTrace();
+			return "Server error occurred. Please try again later.";
+		}
+
+		return null; // No conflicts
+	}
+
 	public boolean deleteUser(String username) {
 		if (isConnectionError) {
 			System.out.println("Connection Error!");

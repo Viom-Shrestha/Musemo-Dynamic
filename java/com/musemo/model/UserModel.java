@@ -23,6 +23,15 @@ public class UserModel {
 		this.password = password;
 	}
 
+	public UserModel(String username, String fullName, String password, String email, String contact) {
+		super();
+		this.username = username;
+		this.fullName = fullName;
+		this.password = password;
+		this.email = email;
+		this.contact = contact;
+	}
+
 	public UserModel(String username, String fullName, String password, String role, String gender, String email,
 			String contact, LocalDate dateOfBirth, String userImage) {
 		super();

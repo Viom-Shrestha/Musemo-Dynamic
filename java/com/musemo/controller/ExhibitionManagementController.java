@@ -6,6 +6,7 @@ import com.musemo.model.ExhibitionModel;
 import com.musemo.service.ExhibitionManagementService;
 import com.musemo.service.ArtifactService;
 import com.musemo.util.ImageUtil;
+import com.musemo.util.ValidationUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -68,7 +69,7 @@ public class ExhibitionManagementController extends HttpServlet {
 			resp.sendRedirect("exhibitionManagement");
 			return;
 		}
-		
+
 		req.setAttribute("relations", relations);
 		req.setAttribute("artifacts", artifacts);
 		req.setAttribute("exhibitions", exhibitions);
@@ -118,26 +119,38 @@ public class ExhibitionManagementController extends HttpServlet {
 			return;
 		}
 
-		Part exhibitionImagePart = request.getPart("exhibitionImage");
 		String exhibitionImageFileName = null;
 
 		ImageUtil imageUtil = new ImageUtil();
 
-		if (exhibitionImagePart != null && exhibitionImagePart.getSize() > 0) {
-			exhibitionImageFileName = imageUtil.getImageNameFromPart(exhibitionImagePart);
-			String uploadPath = request.getServletContext().getRealPath("/") + "resources/images/exhibition";
+		try {
+			Part exhibitionImagePart = request.getPart("exhibitionImage");
 
-			boolean uploaded = imageUtil.uploadImage(exhibitionImagePart, uploadPath, exhibitionImageFileName);
-			if (!uploaded) {
-				request.setAttribute("error", "Exhibition image upload failed.");
-				doGet(request, response);
-				return;
+			if (exhibitionImagePart != null && exhibitionImagePart.getSize() > 0) {
+				if (!ValidationUtil.isValidImageExtension(exhibitionImagePart)) {
+					request.setAttribute("error", "Invalid image format. Only jpg, jpeg, png, and gif are allowed.");
+					doGet(request, response);
+					return;
+				}
+
+				exhibitionImageFileName = imageUtil.getImageNameFromPart(exhibitionImagePart);
+				String uploadPath = request.getServletContext().getRealPath("/") + "resources/images/exhibition";
+
+				boolean uploaded = imageUtil.uploadImage(exhibitionImagePart, uploadPath, exhibitionImageFileName);
+				if (!uploaded) {
+					request.setAttribute("error", "Exhibition image upload failed.");
+					doGet(request, response);
+					return;
+				}
+			} else {
+				// No image uploaded — retain the existing image
+				ExhibitionModel existing = exhibitionService.getExhibitionById(exhibitionId);
+				if (existing != null) {
+					exhibitionImageFileName = existing.getExhibitionImage();
+				}
 			}
-		} else {
-			ExhibitionModel existing = exhibitionService.getExhibitionById(exhibitionId);
-			if (existing != null) {
-				exhibitionImageFileName = existing.getExhibitionImage();
-			}
+		} catch (IOException | ServletException e) {
+			request.setAttribute("error", "Error handling image file. Please ensure the file is valid.");
 		}
 
 		ExhibitionModel exhibition = new ExhibitionModel(exhibitionId, exhibitionTitle, exhibitionDescription,
@@ -163,7 +176,8 @@ public class ExhibitionManagementController extends HttpServlet {
 			}
 		}
 
-		response.sendRedirect("exhibitionManagement");
+		doGet(request, response);
+
 	}
 
 }

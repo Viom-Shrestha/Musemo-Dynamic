@@ -6,10 +6,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
 import com.musemo.model.UserModel;
 import com.musemo.service.AdminProfileService;
 import com.musemo.util.PasswordUtil;
+import com.musemo.util.ValidationUtil;
 
 /**
  * @author Viom Shrestha
@@ -33,38 +33,88 @@ public class AdminProfileController extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-	        throws ServletException, IOException {
+			throws ServletException, IOException {
 
-	    String fullName = request.getParameter("fullName");
-	    String username = request.getParameter("username");
-	    String password = request.getParameter("password");
+		String validationMessage = validateAdminProfileForm(request);
+		if (validationMessage != null) {
+			handleError(request, response, validationMessage);
+			return;
+		}
 
-	    // Create admin model
-	    UserModel admin = new UserModel();
-	    admin.setFullName(fullName);
-	    admin.setUsername(username);
+		String fullName = request.getParameter("fullName");
+		String username = request.getParameter("username");
+		String email = request.getParameter("email");
+		String contact = request.getParameter("contact");
+		String password = request.getParameter("password");
 
-	    // Only encrypt and set password if provided
-	    if (password != null && !password.isEmpty()) {
-	        String encryptedPassword = PasswordUtil.encrypt(username, password);
-	        admin.setPassword(encryptedPassword);
-	    } else {
-	        admin.setPassword(null); // Let service handle keeping old password
-	    }
+		UserModel admin = new UserModel();
+		admin.setFullName(fullName);
+		admin.setUsername(username);
+		admin.setEmail(email);
+		admin.setContact(contact);
 
-	    // Update admin data
-	    boolean updated = service.updateAdminCredentials(admin);
+		if (!ValidationUtil.isNullOrEmpty(password)) {
+			admin.setPassword(PasswordUtil.encrypt(username, password));
+		} else {
+			admin.setPassword(null); // Retain existing password
+		}
 
-	    if (updated) {
-	        request.setAttribute("success", "Profile updated successfully.");
-	    } else {
-	        request.setAttribute("error", "Failed to update profile.");
-	    }
+		boolean updated = service.updateAdminCredentials(admin);
+		if (updated) {
+			request.setAttribute("success", "Profile updated successfully.");
+		} else {
+			request.setAttribute("error", "Failed to update profile.");
+		}
 
-	    // Reload and send updated data to JSP
-	    admin = service.getAdmin();
-	    request.setAttribute("admin", admin);
-	    request.getRequestDispatcher("/WEB-INF/pages/adminProfile.jsp").forward(request, response);
+		admin = service.getAdmin();
+		request.setAttribute("admin", admin);
+		request.getRequestDispatcher("/WEB-INF/pages/adminProfile.jsp").forward(request, response);
 	}
 
+	private String validateAdminProfileForm(HttpServletRequest request) {
+		String username = request.getParameter("username");
+		String fullName = request.getParameter("fullName");
+		String email = request.getParameter("email");
+		String contact = request.getParameter("contact");
+		String password = request.getParameter("password");
+
+		String duplicateError = service.isUserInfoTaken(username, email, contact);
+		if (duplicateError != null) {
+			return duplicateError;
+		}
+
+		if (ValidationUtil.isNullOrEmpty(fullName) || !ValidationUtil.isAlphabetic(fullName.replaceAll("\\s+", ""))) {
+			return "Full name must contain only letters and spaces.";
+		}
+
+		if (!ValidationUtil.isValidEmail(email)) {
+			return "Invalid email format.";
+		}
+
+		if (!ValidationUtil.isValidPhoneNumber(contact)) {
+			return "Phone number must be 10 digits and start with 98.";
+		}
+
+		if (!ValidationUtil.isNullOrEmpty(password) && !ValidationUtil.isValidPassword(password)) {
+			return "Password must be at least 8 characters long, include an uppercase letter, a number, and a symbol.";
+		}
+
+		return null;
+	}
+
+	private void handleError(HttpServletRequest req, HttpServletResponse resp, String message)
+			throws ServletException, IOException {
+		req.setAttribute("error", message);
+		req.setAttribute("admin", createTempUserModel(req));
+		doGet(req, resp);
+	}
+
+	private UserModel createTempUserModel(HttpServletRequest req) {
+		UserModel user = new UserModel();
+		user.setFullName(req.getParameter("fullName"));
+		user.setEmail(req.getParameter("email"));
+		user.setContact(req.getParameter("contact"));
+
+		return user;
+	}
 }

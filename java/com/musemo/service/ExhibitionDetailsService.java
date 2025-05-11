@@ -1,14 +1,11 @@
 package com.musemo.service;
 
 import com.musemo.config.DbConfig;
-import com.musemo.model.ArtifactModel;
 import com.musemo.model.ExhibitionModel;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ExhibitionDetailsService {
 
@@ -33,24 +30,6 @@ public class ExhibitionDetailsService {
                     exhibition.setExhibitionImage(rs.getString("exhibitionImage"));
                 }
             }
-            /*
-            // Fetch associated artifacts
-            if (exhibition != null) {
-                try (PreparedStatement stmt = conn.prepareStatement(artifactsQuery)) {
-                    stmt.setString(1, id);
-                    ResultSet rs = stmt.executeQuery();
-                    List<ArtifactModel> artifacts = new ArrayList<>();
-                    while (rs.next()) {
-                        ArtifactModel artifact = new ArtifactModel();
-                        artifact.setArtifactID(rs.getString("artifactId"));
-                        artifact.setArtifactName(rs.getString("artifactName"));
-                        artifact.setArtifactImage(rs.getString("artifactImage"));
-                        artifacts.add(artifact);
-                    }
-                    exhibition.setArtifacts(artifacts);
-                }
-            }
-            */
 
         } catch (Exception e) {
             e.printStackTrace();

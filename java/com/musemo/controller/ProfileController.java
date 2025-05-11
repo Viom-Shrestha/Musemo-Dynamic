@@ -3,6 +3,7 @@ package com.musemo.controller;
 import com.musemo.model.UserModel;
 import com.musemo.service.ProfileService;
 import com.musemo.util.SessionUtil;
+import com.musemo.util.CookieUtil;
 import com.musemo.util.ValidationUtil;
 import com.musemo.util.ImageUtil;
 
@@ -49,6 +50,7 @@ public class ProfileController extends HttpServlet {
 				boolean deleted = profileService.deleteUser(loggedInUsername);
 				if (deleted) {
 					session.invalidate(); // log out the user
+					CookieUtil.deleteCookie(response, "username");
 					response.sendRedirect("login");
 				} else {
 					request.setAttribute("error", "Failed to delete account.");
@@ -135,61 +137,76 @@ public class ProfileController extends HttpServlet {
 		user.setDateOfBirth(dateOfBirth);
 
 		ImageUtil imageUtil = new ImageUtil();
-		Part profilePhotoPart = request.getPart("userImage");
 		String profilePhotoFileName = null;
 
-		if (profilePhotoPart != null && profilePhotoPart.getSize() > 0) {
-			System.out.println("Received profile image: " + profilePhotoPart.getSubmittedFileName());
-			System.out.println("File size: " + profilePhotoPart.getSize());
+		try {
+			Part profilePhotoPart = request.getPart("userImage");
 
-			profilePhotoFileName = imageUtil.getImageNameFromPart(profilePhotoPart);
-			System.out.println("Extracted image name: " + profilePhotoFileName);
+			// Only validate and process if a new image was uploaded
+			if (profilePhotoPart != null && profilePhotoPart.getSize() > 0) {
+				if (!ValidationUtil.isValidImageExtension(profilePhotoPart)) {
+					request.setAttribute("error", "Invalid image format. Only jpg, jpeg, png, and gif are allowed.");
+					doGet(request, response);
+					return;
+				}
 
-			String uploadPath = request.getServletContext().getRealPath("/") + "resources/imagesuser";
-			System.out.println("Resolved upload path: " + uploadPath);
+				System.out.println("Received profile image: " + profilePhotoPart.getSubmittedFileName());
+				System.out.println("File size: " + profilePhotoPart.getSize());
 
-			boolean uploaded = imageUtil.uploadImage(profilePhotoPart, uploadPath,
-					imageUtil.getImageNameFromPart(profilePhotoPart));
+				profilePhotoFileName = imageUtil.getImageNameFromPart(profilePhotoPart);
+				System.out.println("Extracted image name: " + profilePhotoFileName);
 
-			if (!uploaded) {
-				System.out.println("Image upload failed.");
-				request.setAttribute("error", "Profile photo upload failed.");
-				doGet(request, response);
-				return;
+				String uploadPath = request.getServletContext().getRealPath("/") + "resources/images/user";
+				System.out.println("Resolved upload path: " + uploadPath);
+
+				boolean uploaded = imageUtil.uploadImage(profilePhotoPart, uploadPath, profilePhotoFileName);
+				if (!uploaded) {
+					System.out.println("Image upload failed.");
+					request.setAttribute("error", "Profile photo upload failed.");
+					doGet(request, response);
+					return;
+				} else {
+					System.out.println("Image uploaded successfully.");
+					user.setUserImage(profilePhotoFileName);
+				}
 			} else {
-				System.out.println("Image uploaded successfully.");
-				// Save the relative path inside DB
-				user.setUserImage(profilePhotoFileName);
-				profileService.updateUser(user);
-
-				request.setAttribute("success", "Profile updated successfully!");
-				doGet(request, response);
+				System.out.println("No new profile photo provided. Retaining existing image.");
+				UserModel existingUser = profileService.getUserByUsername(username);
+				if (existingUser != null) {
+					user.setUserImage(existingUser.getUserImage());
+				}
 			}
 
-		} else {
-			System.out.println("No new profile photo provided. Retaining existing image.");
-			UserModel existingUser = profileService.getUserByUsername(username);
-			if (existingUser != null) {
-				user.setUserImage(existingUser.getUserImage());
-			}
+			// Save user update after handling image
+			profileService.updateUser(user);
+			request.setAttribute("success", "Profile updated successfully!");
+			doGet(request, response);
+
+		} catch (IOException | ServletException e) {
+			request.setAttribute("error", "Error handling image file. Please ensure the file is valid.");
 		}
 
 		// Perform update only after image logic is complete
 		System.out.println("Updating user profile in database...");
 		profileService.updateUser(user);
 		System.out.println("User profile updated successfully.");
-
-		// Update in DB
+		response.sendRedirect(request.getContextPath() + "/logout");
 
 	}
 
 	private String validateProfileForm(HttpServletRequest req) {
+		String username = req.getParameter("username");
 		String fullName = req.getParameter("fullName");
 		String gender = req.getParameter("gender");
 		String email = req.getParameter("email");
 		String contact = req.getParameter("contact");
 		String password = req.getParameter("newPassword");
 		String confirmPassword = req.getParameter("confirmNewPassword");
+
+		String duplicateError = profileService.isUserInfoTaken(username, email, contact);
+		if (duplicateError != null) {
+			return duplicateError;
+		}
 
 		if (!ValidationUtil.isAlphabetic(fullName.replaceAll("\\s+", ""))) {
 			return "Full Name must contain only letters and spaces.";

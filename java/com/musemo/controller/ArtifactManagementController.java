@@ -14,6 +14,7 @@ import java.util.List;
 import com.musemo.model.ArtifactModel;
 import com.musemo.service.ArtifactManagementService;
 import com.musemo.util.ImageUtil;
+import com.musemo.util.ValidationUtil;
 
 /**
  * @author Viom Shrestha
@@ -83,43 +84,47 @@ public class ArtifactManagementController extends HttpServlet {
 		System.out.println("Action = " + action); // DEBUG
 
 		ImageUtil imageUtil = new ImageUtil();
-		Part artifactImagePart = request.getPart("artifactImage"); // Get the artifact image part from the request
 		String artifactImageFileName = null;
 
-		// Check if a new image was uploaded
-		if (artifactImagePart != null && artifactImagePart.getSize() > 0) {
-			System.out.println("Received artifact image: " + artifactImagePart.getSubmittedFileName());
-			System.out.println("File size: " + artifactImagePart.getSize());
+		try {
+			Part artifactImagePart = request.getPart("artifactImage");
 
-			// Extract the image name from the Part
-			artifactImageFileName = imageUtil.getImageNameFromPart(artifactImagePart);
-			System.out.println("Extracted image name: " + artifactImageFileName);
+			// Only validate and process if a new image was uploaded
+			if (artifactImagePart != null && artifactImagePart.getSize() > 0) {
+				if (!ValidationUtil.isValidImageExtension(artifactImagePart)) {
+					request.setAttribute("error", "Invalid image format. Only jpg, jpeg, png, and gif are allowed.");
+					doGet(request, response);
+					return;
+				}
 
-			// Define the upload path for the image (assuming "artifact" folder)
-			String uploadPath = request.getServletContext().getRealPath("/") + "resources/images/artifact";
+				System.out.println("Received artifact image: " + artifactImagePart.getSubmittedFileName());
+				System.out.println("File size: " + artifactImagePart.getSize());
 
-			System.out.println("Resolved upload path: " + uploadPath);
-			System.out.println("Final path: " + uploadPath + "/" + artifactImageFileName);
+				artifactImageFileName = imageUtil.getImageNameFromPart(artifactImagePart);
+				System.out.println("Extracted image name: " + artifactImageFileName);
 
-			// Upload the image to the server
-			boolean uploaded = imageUtil.uploadImage(artifactImagePart, uploadPath, artifactImageFileName);
+				String uploadPath = request.getServletContext().getRealPath("/") + "resources/images/artifact";
+				System.out.println("Resolved upload path: " + uploadPath);
+				System.out.println("Final path: " + uploadPath + "/" + artifactImageFileName);
 
-			if (!uploaded) {
-				System.out.println("Image upload failed.");
-				request.setAttribute("error", "Artifact image upload failed.");
-				// Handle the failure appropriately, maybe returning an error or redirecting
-				doGet(request, response);
-				return;
+				boolean uploaded = imageUtil.uploadImage(artifactImagePart, uploadPath, artifactImageFileName);
+				if (!uploaded) {
+					System.out.println("Image upload failed.");
+					request.setAttribute("error", "Artifact image upload failed.");
+					doGet(request, response);
+					return;
+				} else {
+					System.out.println("Image uploaded successfully.");
+				}
 			} else {
-				System.out.println("Image uploaded successfully.");
+				// No new image uploaded — use the existing one
+				ArtifactModel existingArtifact = service.getArtifactById(artifactID);
+				if (existingArtifact != null) {
+					artifactImageFileName = existingArtifact.getArtifactImage();
+				}
 			}
-
-		} else {
-			// Retain the existing image if none was uploaded
-			ArtifactModel existingArtifact = service.getArtifactById(artifactID);
-			if (existingArtifact != null) {
-				artifactImageFileName = existingArtifact.getArtifactImage();
-			}
+		} catch (IOException | ServletException e) {
+			request.setAttribute("error", "Error handling image file. Please ensure the file is valid.");
 		}
 
 		// Create an artifact object with the collected data
@@ -150,6 +155,7 @@ public class ArtifactManagementController extends HttpServlet {
 			}
 		}
 
-		response.sendRedirect("artifactManagement");
+		doGet(request, response);
+
 	}
 }

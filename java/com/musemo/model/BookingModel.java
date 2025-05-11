@@ -15,15 +15,6 @@ public class BookingModel {
 		super();
 	}
 
-	public BookingModel(int exhibitionId, String username, Date bookingDate, Time bookingTime, String ticket) {
-		super();
-		this.exhibitionId = exhibitionId;
-		this.username = username;
-		this.bookingDate = bookingDate;
-		this.bookingTime = bookingTime;
-		this.ticket = ticket;
-	}
-
 	public BookingModel(int bookingId, int exhibitionId, String username, Date bookingDate, Time bookingTime,
 			String ticket) {
 		super();

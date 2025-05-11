@@ -125,7 +125,7 @@ public class HomeService {
 		List<ArtifactModel> artifacts = new ArrayList<>();
         // Selecting the 'id' column used in ORDER BY might be good practice, though not always strictly required.
 		String sql = "SELECT artifactName, timePeriod, description, artifactImage "
-                   + "FROM artifact ORDER BY artifactId DESC LIMIT 4";
+                   + "FROM artifact ORDER BY artifactId DESC LIMIT 3";
 
 		try (Connection conn = DbConfig.getDbConnection();
 			 PreparedStatement pstmt = conn.prepareStatement(sql)) {

@@ -77,7 +77,7 @@ public class RegisterController extends HttpServlet {
 		String contact = req.getParameter("contact");
 		String password = req.getParameter("password");
 		
-        // Check if the username is already taken
+        // Check if the data is already taken
 		String duplicateError = registerService.isUserInfoTaken(username, email, contact);
 		if (duplicateError != null) {
 		    return duplicateError;
@@ -103,7 +103,7 @@ public class RegisterController extends HttpServlet {
 		if (!ValidationUtil.isValidPassword(password))
 			return "Password must be at least 8 characters long, with 1 uppercase letter, 1 number, and 1 symbol.";
 		if (!ValidationUtil.isAgeAtLeast16(dob))
-			return "You must be at least 16 years old to register.";
+			return "You must be at least 16 years old and less than 100 years to register.";
 
 		// Image validation
 		try {

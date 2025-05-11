@@ -69,6 +69,6 @@ public class BookingController extends HttpServlet {
 			request.setAttribute("error", "Booking failed. Please try again.");
 		}
 
-		request.getRequestDispatcher("/WEB-INF/pages/booking.jsp").forward(request, response);
+		doGet(request, response);
 	}
 }
