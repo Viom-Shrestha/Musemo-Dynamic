@@ -184,7 +184,6 @@
 				"${entry.key}": ${entry.value}<c:if test="${!loop.last}">,</c:if>
 			</c:forEach>
 		};
-
 		const labels = Object.keys(artifactDistributionData);
 		const counts = Object.values(artifactDistributionData);
 

@@ -48,25 +48,6 @@
 			</div>
 		</section>
 
-		<!-- Featured Artifacts 
-    <section class="featured-section">
-        <h2 class="featured-title">Featured Artifacts</h2>
-        <div class="artifacts-grid">
-            <c:forEach var="artifact" items="${artifactList}">
-                <div class="artifact-card">
-                    <div class="artifact-img">
-                        <img src="${artifact.artifactImage}" alt="${artifact.artifactName}" />
-                    </div>
-                    <div class="artifact-info">
-                        <p class="artifact-title">${artifact.artifactName}</p>
-                        <p class="artifact-subtitle">${artifact.artifactType}</p>
-                        <a href="${contextPath}/artifactDetails?id=${artifact.artifactID}" class="view-more-btn">View More</a>
-                    </div>
-                </div>
-            </c:forEach>
-        </div>
-    </section>
-    -->
 	</main>
 
 	<jsp:include page="footer.jsp" />

@@ -48,7 +48,7 @@
 				class="search-filter">
 				<div class="search-input">
 					<i class="fas fa-search"></i> <input type="text" name="keyword"
-						placeholder="Search" value="${param.keyword}">
+						placeholder="Search" value="${param.keyword}" >
 				</div>
 				<div class="filter-select">
 					<select name="searchBy">
@@ -85,37 +85,47 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="artifact" items="${artifacts}">
-					<tr>
-						<td class="image-cell"><img
-							src="${contextPath}/resources/images/artifact/${artifact.artifactImage}"
-							alt="Artifact Image"></td>
-						<td>${artifact.artifactID}</td>
-						<td>${artifact.artifactName}</td>
-						<td>${artifact.artifactType}</td>
-						<td>${artifact.creatorName}</td>
-						<td>${artifact.timePeriod}</td>
-						<td>${artifact.origin}</td>
-						<td>${artifact.condition}</td>
-						<td>${artifact.description}</td>
-						<td>
-							<div class="action-buttons">
-								<a
-									href="${contextPath}/artifactManagement?editId=${artifact.artifactID}"
-									class="edit-button" aria-label="Edit"> <i
-									class="fa-solid fa-pen-to-square"></i>
-								</a> <a
-									href="${contextPath}/artifactManagement?deleteId=${artifact.artifactID}"
-									class="delete-button" aria-label="Delete"
-									onclick="return confirm('Are you sure you want to delete this artifact?');">
-									<i class="fa-solid fa-trash"></i>
-								</a>
-
-							</div>
-						</td>
-					</tr>
-				</c:forEach>
+				<c:choose>
+					<c:when test="${not empty artifacts}">
+						<c:forEach var="artifact" items="${artifacts}">
+							<tr>
+								<td class="image-cell"><img
+									src="${contextPath}/resources/images/artifact/${artifact.artifactImage}"
+									alt="Artifact Image"></td>
+								<td>${artifact.artifactID}</td>
+								<td>${artifact.artifactName}</td>
+								<td>${artifact.artifactType}</td>
+								<td>${artifact.creatorName}</td>
+								<td>${artifact.timePeriod}</td>
+								<td>${artifact.origin}</td>
+								<td>${artifact.condition}</td>
+								<td>${artifact.description}</td>
+								<td>
+									<div class="action-buttons">
+										<a
+											href="${contextPath}/artifactManagement?editId=${artifact.artifactID}"
+											class="edit-button" aria-label="Edit"> <i
+											class="fa-solid fa-pen-to-square"></i>
+										</a> <a
+											href="${contextPath}/artifactManagement?deleteId=${artifact.artifactID}"
+											class="delete-button" aria-label="Delete"
+											onclick="return confirm('Are you sure you want to delete this artifact?');">
+											<i class="fa-solid fa-trash"></i>
+										</a>
+									</div>
+								</td>
+							</tr>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<tr>
+							<td colspan="10" style="text-align: center; padding: 20px;">No
+								results found.</td>
+						</tr>
+					</c:otherwise>
+				</c:choose>
 			</tbody>
+
 		</table>
 
 		<div class="form-messages">

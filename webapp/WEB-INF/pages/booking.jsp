@@ -67,9 +67,8 @@
 
 							<!-- Username -->
 							<div class="form-group">
-								<label for="username">Username:</label> <input type="text"
-									id="username" class="form-control" name="username"
-									value="${username}" readonly>
+								<label for="username">Username:</label> 
+								<input type="text" id="username" class="form-control" name="username" value="${username}" readonly>
 							</div>
 						</div>
 

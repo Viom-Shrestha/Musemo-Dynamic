@@ -77,33 +77,44 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="exhibition" items="${exhibitions}">
-					<tr>
-						<td class="image-cell"><img
-							src="${contextPath}/resources/images/exhibition/${exhibition.exhibitionImage}"
-							alt="Exhibition Image" class="user-image"></td>
-						<td>${exhibition.exhibitionId}</td>
-						<td>${exhibition.exhibitionTitle}</td>
-						<td>${exhibition.exhibitionDescription}</td>
-						<td><fmt:formatDate value="${exhibition.startDate}"
-								pattern="yyyy-MM-dd" /></td>
-						<td><fmt:formatDate value="${exhibition.endDate}"
-								pattern="yyyy-MM-dd" /></td>
-						<td>
-							<div class="action-buttons">
-								<a
-									href="${contextPath}/exhibitionManagement?editId=${exhibition.exhibitionId}"
-									class="edit-button"><i class="fa-solid fa-pen-to-square"></i></a>
-								<a
-									href="${contextPath}/exhibitionManagement?deleteId=${exhibition.exhibitionId}"
-									class="delete-button"
-									onclick="return confirm('Are you sure you want to delete this exhibition?');"><i
-									class="fa-solid fa-trash"></i></a>
-							</div>
-						</td>
-					</tr>
-				</c:forEach>
+				<c:choose>
+					<c:when test="${not empty exhibitions}">
+						<c:forEach var="exhibition" items="${exhibitions}">
+							<tr>
+								<td class="image-cell"><img
+									src="${contextPath}/resources/images/exhibition/${exhibition.exhibitionImage}"
+									alt="Exhibition Image" class="user-image"></td>
+								<td>${exhibition.exhibitionId}</td>
+								<td>${exhibition.exhibitionTitle}</td>
+								<td>${exhibition.exhibitionDescription}</td>
+								<td><fmt:formatDate value="${exhibition.startDate}"
+										pattern="yyyy-MM-dd" /></td>
+								<td><fmt:formatDate value="${exhibition.endDate}"
+										pattern="yyyy-MM-dd" /></td>
+								<td>
+									<div class="action-buttons">
+										<a
+											href="${contextPath}/exhibitionManagement?editId=${exhibition.exhibitionId}"
+											class="edit-button"><i class="fa-solid fa-pen-to-square"></i></a>
+										<a
+											href="${contextPath}/exhibitionManagement?deleteId=${exhibition.exhibitionId}"
+											class="delete-button"
+											onclick="return confirm('Are you sure you want to delete this exhibition?');"><i
+											class="fa-solid fa-trash"></i></a>
+									</div>
+								</td>
+							</tr>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<tr>
+							<td colspan="7" style="text-align: center; padding: 20px;">No
+								results found.</td>
+						</tr>
+					</c:otherwise>
+				</c:choose>
 			</tbody>
+
 		</table>
 
 		<div class="form-messages">
@@ -202,8 +213,7 @@
 								href="exhibitionManagement?removeExhibitionId=${rel.exhibitionId}&removeArtifactId=${rel.artifactId}"
 								class="table-delete-btn"
 								onclick="return confirm('Remove this artifact from the exhibition?');"
-								class="fa-solid fa-trash">Remove</a>
-							</td>
+								class="fa-solid fa-trash">Remove</a></td>
 						</tr>
 					</c:forEach>
 				</tbody>

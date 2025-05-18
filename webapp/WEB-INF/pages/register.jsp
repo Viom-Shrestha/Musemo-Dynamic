@@ -78,8 +78,8 @@
 					<div class="form-group">
 						<label class="form-label" for="gender">Gender</label> <select
 							name="gender" id="gender" class="form-select">
-							<option value="" selected disabled>Select gender</option>
-							<option value="male" ${gender == 'male' ? 'selected' : ''}>Male</option>
+							<option value="male"
+								${gender == 'male' || gender == null ? 'selected' : ''}>Male</option>
 							<option value="female" ${gender == 'female' ? 'selected' : ''}>Female</option>
 							<option value="other" ${gender == 'other' ? 'selected' : ''}>Other</option>
 						</select>
