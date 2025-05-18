@@ -8,28 +8,47 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Service class responsible for fetching data and statistics for the admin
+ * dashboard. This includes user counts, booking counts, active exhibition
+ * counts, artifact counts, artifact distribution, artifacts in exhibitions,
+ * exhibition booking counts, and user booking details.
+ * 
+ * @author 23048612 Viom Shrestha
+ */
 public class DashboardService {
+	private Connection dbConn;
+
+	/**
+	 * Constructs a DashboardService, establishing a connection to the database.
+	 */
+	public DashboardService() {
+		try {
+			dbConn = DbConfig.getDbConnection();
+		} catch (Exception e) {
+			e.printStackTrace();
+			// Consider more robust error handling, like logging or throwing a custom
+			// exception.
+		}
+	}
 
 	/**
 	 * Retrieves the total count of users with the 'User' role directly from the
 	 * database.
-	 * 
+	 *
 	 * @return The total number of users.
 	 * @throws SQLException           If a database access error occurs.
-	 * @throws ClassNotFoundException If the JDBC driver is not found.
+	 * @throws ClassNotFoundException If the JDBC driver is not found (though this
+	 *                                should be handled by DbConfig).
 	 */
 	public int getUserCount() throws SQLException, ClassNotFoundException {
 		String sql = "SELECT COUNT(*) FROM user WHERE role = 'User'";
-		try (Connection conn = DbConfig.getDbConnection();
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sql)) {
+		try (Statement stmt = dbConn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 			if (rs.next()) {
 				return rs.getInt(1);
 			}
@@ -39,16 +58,14 @@ public class DashboardService {
 
 	/**
 	 * Retrieves the total count of bookings directly from the database.
-	 * 
+	 *
 	 * @return The total number of bookings.
 	 * @throws SQLException           If a database access error occurs.
 	 * @throws ClassNotFoundException If the JDBC driver is not found.
 	 */
 	public int getBookingCount() throws SQLException, ClassNotFoundException {
 		String sql = "SELECT COUNT(*) FROM booking";
-		try (Connection conn = DbConfig.getDbConnection();
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sql)) {
+		try (Statement stmt = dbConn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 			if (rs.next()) {
 				return rs.getInt(1);
 			}
@@ -60,16 +77,14 @@ public class DashboardService {
 	 * Retrieves the count of currently active exhibitions directly from the
 	 * database. An exhibition is considered active if its end date is on or after
 	 * the current date.
-	 * 
+	 *
 	 * @return The number of active exhibitions.
 	 * @throws SQLException           If a database access error occurs.
 	 * @throws ClassNotFoundException If the JDBC driver is not found.
 	 */
 	public int getActiveExhibitionCount() throws SQLException, ClassNotFoundException {
 		String sql = "SELECT COUNT(*) FROM exhibition WHERE endDate >= CURRENT_DATE";
-		try (Connection conn = DbConfig.getDbConnection();
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sql)) {
+		try (Statement stmt = dbConn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 			if (rs.next()) {
 				return rs.getInt(1);
 			}
@@ -79,16 +94,14 @@ public class DashboardService {
 
 	/**
 	 * Retrieves the total count of artifacts directly from the database.
-	 * 
+	 *
 	 * @return The total number of artifacts.
 	 * @throws SQLException           If a database access error occurs.
 	 * @throws ClassNotFoundException If the JDBC driver is not found.
 	 */
 	public int getArtifactCount() throws SQLException, ClassNotFoundException {
 		String sql = "SELECT COUNT(*) FROM artifact";
-		try (Connection conn = DbConfig.getDbConnection();
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sql)) {
+		try (Statement stmt = dbConn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 			if (rs.next()) {
 				return rs.getInt(1);
 			}
@@ -100,7 +113,7 @@ public class DashboardService {
 	 * Retrieves the distribution of artifacts by category directly from the
 	 * database. Returns a Map where the key is the category and the value is the
 	 * count.
-	 * 
+	 *
 	 * @return A map of artifact categories and their counts.
 	 * @throws SQLException           If a database access error occurs.
 	 * @throws ClassNotFoundException If the JDBC driver is not found.
@@ -108,228 +121,106 @@ public class DashboardService {
 	public Map<String, Integer> getArtifactDistribution() throws SQLException, ClassNotFoundException {
 		Map<String, Integer> distribution = new HashMap<>();
 		String sql = "SELECT artifactType, COUNT(*) AS count FROM artifact GROUP BY artifactType";
-		try (Connection conn = DbConfig.getDbConnection();
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sql)) {
+		try (Statement stmt = dbConn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 			while (rs.next()) {
 				distribution.put(rs.getString("artifactType"), rs.getInt("count"));
 			}
 		}
 		return distribution;
 	}
-	
-	// Example 1: Artifacts with Their Exhibitions
-    public static List<ArtifactExhibitionView> getArtifactsInExhibitions() throws SQLException, ClassNotFoundException{
-        List<ArtifactExhibitionView> result = new ArrayList<>();
-        String sql = "SELECT a.artifactId, a.artifactName, a.artifactType, " +
-                     "e.exhibitionId, e.exhibitionTitle, e.startDate, e.endDate " +
-                     "FROM artifact a " +
-                     "JOIN exhibitionartifact ea ON a.artifactId = ea.artifactId " +
-                     "JOIN exhibition e ON e.exhibitionId = ea.exhibitionId " +
-                     "ORDER BY e.startDate DESC";
 
-        try (Connection conn = DbConfig.getDbConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+	/**
+	 * Retrieves a list of maps, where each map contains details of an artifact and
+	 * the exhibition it belongs to.
+	 *
+	 * @return A list of maps containing artifact ID, name, type, exhibition ID,
+	 *         title, start date, and end date.
+	 * @throws SQLException           If a database access error occurs.
+	 * @throws ClassNotFoundException If the JDBC driver is not found.
+	 */
+	public List<Map<String, Object>> getArtifactsInExhibitions() throws SQLException, ClassNotFoundException {
+		List<Map<String, Object>> result = new ArrayList<>();
+		String sql = "SELECT a.artifactId, a.artifactName, a.artifactType, "
+				+ "e.exhibitionId, e.exhibitionTitle, e.startDate, e.endDate " + "FROM artifact a "
+				+ "JOIN exhibitionartifact ea ON a.artifactId = ea.artifactId "
+				+ "JOIN exhibition e ON e.exhibitionId = ea.exhibitionId " + "ORDER BY e.startDate DESC";
 
-            while (rs.next()) {
-                ArtifactExhibitionView view = new ArtifactExhibitionView();
-                view.setArtifactId(rs.getString("artifactId"));
-                view.setArtifactName(rs.getString("artifactName"));
-                view.setArtifactType(rs.getString("artifactType"));
-                view.setExhibitionId(rs.getInt("exhibitionId"));
-                view.setExhibitionTitle(rs.getString("exhibitionTitle"));
+		try (PreparedStatement ps = dbConn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) {
+				Map<String, Object> record = new HashMap<>();
+				record.put("artifactId", rs.getString("artifactId"));
+				record.put("artifactName", rs.getString("artifactName"));
+				record.put("artifactType", rs.getString("artifactType"));
+				record.put("exhibitionId", rs.getInt("exhibitionId"));
+				record.put("exhibitionTitle", rs.getString("exhibitionTitle"));
 
-                Date startDate = rs.getDate("startDate");
-                Date endDate = rs.getDate("endDate");
-                if (startDate != null) {
-                    view.setStartDate(startDate.toLocalDate());
-                }
-                if (endDate != null) {
-                    view.setEndDate(endDate.toLocalDate());
-                }
-                result.add(view);
-            }
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
+				Date startDate = rs.getDate("startDate");
+				record.put("startDate", startDate != null ? startDate.toLocalDate() : null);
 
-    // Example 2: Total Bookings per Exhibition
-    public static List<ExhibitionBookingCount> getExhibitionBookingCounts() throws SQLException, ClassNotFoundException {
-        List<ExhibitionBookingCount> result = new ArrayList<>();
-        String sql = "SELECT e.exhibitionId, e.exhibitionTitle, COUNT(b.bookingId) AS totalBookings " +
-                     "FROM exhibition e " +
-                     "LEFT JOIN booking b ON e.exhibitionId = b.exhibitionId " +
-                     "GROUP BY e.exhibitionId, e.exhibitionTitle " +
-                     "ORDER BY totalBookings DESC";
+				Date endDate = rs.getDate("endDate");
+				record.put("endDate", endDate != null ? endDate.toLocalDate() : null);
 
-        try (Connection conn = DbConfig.getDbConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+				result.add(record);
+			}
+		}
+		return result;
+	}
 
-            while (rs.next()) {
-                ExhibitionBookingCount count = new ExhibitionBookingCount();
-                count.setExhibitionId(rs.getInt("exhibitionId"));
-                count.setExhibitionTitle(rs.getString("exhibitionTitle"));
-                count.setTotalBookings(rs.getInt("totalBookings"));
-                result.add(count);
-            }
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
+	/**
+	 * Retrieves a list of maps, where each map contains an exhibition's ID, title,
+	 * and the total number of bookings for that exhibition, ordered by the number
+	 * of bookings in descending order.
+	 *
+	 * @return A list of maps containing exhibition ID, title, and total bookings.
+	 * @throws SQLException           If a database access error occurs.
+	 * @throws ClassNotFoundException If the JDBC driver is not found.
+	 */
+	public List<Map<String, Object>> getExhibitionBookingCounts() throws SQLException, ClassNotFoundException {
+		List<Map<String, Object>> result = new ArrayList<>();
+		String sql = "SELECT e.exhibitionId, e.exhibitionTitle, COUNT(b.bookingId) AS totalBookings "
+				+ "FROM exhibition e " + "LEFT JOIN booking b ON e.exhibitionId = b.exhibitionId "
+				+ "GROUP BY e.exhibitionId, e.exhibitionTitle " + "ORDER BY totalBookings DESC";
 
-    // Example 3: User Booking Details
-    public static List<UserBookingDetails> getUserBookingDetails() throws SQLException, ClassNotFoundException{
-        List<UserBookingDetails> result = new ArrayList<>();
-        String sql = "SELECT u.username, u.fullName, e.exhibitionTitle, b.bookingDate, b.bookingTime " +
-                     "FROM user u " +
-                     "JOIN booking b ON u.username = b.username " +
-                     "JOIN exhibition e ON b.exhibitionId = e.exhibitionId " +
-                     "ORDER BY b.bookingDate DESC, b.bookingTime DESC";
+		try (PreparedStatement ps = dbConn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) {
+				Map<String, Object> record = new HashMap<>();
+				record.put("exhibitionId", rs.getInt("exhibitionId"));
+				record.put("exhibitionTitle", rs.getString("exhibitionTitle"));
+				record.put("totalBookings", rs.getInt("totalBookings"));
+				result.add(record);
+			}
+		}
+		return result;
+	}
 
-        try (Connection conn = DbConfig.getDbConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+	/**
+	 * Retrieves a list of maps, where each map contains details of a user's
+	 * booking, including their username, full name, the title of the booked
+	 * exhibition, the booking date, and the booking time, ordered by booking date
+	 * and time in descending order.
+	 *
+	 * @return A list of maps containing username, full name, exhibition title,
+	 *         booking date, and booking time.
+	 * @throws SQLException           If a database access error occurs.
+	 * @throws ClassNotFoundException If the JDBC driver is not found.
+	 */
+	public List<Map<String, Object>> getUserBookingDetails() throws SQLException, ClassNotFoundException {
+		List<Map<String, Object>> result = new ArrayList<>();
+		String sql = "SELECT u.username, u.fullName, e.exhibitionTitle, b.bookingDate, b.bookingTime " + "FROM user u "
+				+ "JOIN booking b ON u.username = b.username " + "JOIN exhibition e ON b.exhibitionId = e.exhibitionId "
+				+ "ORDER BY b.bookingDate DESC, b.bookingTime DESC";
 
-            while (rs.next()) {
-                UserBookingDetails details = new UserBookingDetails();
-                details.setUsername(rs.getString("username"));
-                details.setFullName(rs.getString("fullName"));
-                details.setExhibitionTitle(rs.getString("exhibitionTitle"));
-                details.setBookingDate(rs.getDate("bookingDate").toLocalDate());
-                details.setBookingTime(rs.getTime("bookingTime").toLocalTime());
-                result.add(details);
-            }
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    // DTO for Example 1: Artifact with Exhibition Details
-    public static class ArtifactExhibitionView {
-        private String artifactId;
-        private String artifactName;
-        private String artifactType;
-        private int exhibitionId;
-        private String exhibitionTitle;
-        private LocalDate startDate;
-        private LocalDate endDate;
-
-        // Getters and Setters
-        public String getArtifactId() {
-            return artifactId;
-        }
-        public void setArtifactId(String artifactId) {
-            this.artifactId = artifactId;
-        }
-        public String getArtifactName() {
-            return artifactName;
-        }
-        public void setArtifactName(String artifactName) {
-            this.artifactName = artifactName;
-        }
-        public String getArtifactType() {
-            return artifactType;
-        }
-        public void setArtifactType(String artifactType) {
-            this.artifactType = artifactType;
-        }
-        public int getExhibitionId() {
-            return exhibitionId;
-        }
-        public void setExhibitionId(int exhibitionId) {
-            this.exhibitionId = exhibitionId;
-        }
-        public String getExhibitionTitle() {
-            return exhibitionTitle;
-        }
-        public void setExhibitionTitle(String exhibitionTitle) {
-            this.exhibitionTitle = exhibitionTitle;
-        }
-        public LocalDate getStartDate() {
-            return startDate;
-        }
-        public void setStartDate(LocalDate startDate) {
-            this.startDate = startDate;
-        }
-        public LocalDate getEndDate() {
-            return endDate;
-        }
-        public void setEndDate(LocalDate endDate) {
-            this.endDate = endDate;
-        }
-    }
-
-    // DTO for Example 2: Exhibition Booking Counts
-    public static class ExhibitionBookingCount {
-        private int exhibitionId;
-        private String exhibitionTitle;
-        private int totalBookings;
-
-        // Getters and Setters
-        public int getExhibitionId() {
-            return exhibitionId;
-        }
-        public void setExhibitionId(int exhibitionId) {
-            this.exhibitionId = exhibitionId;
-        }
-        public String getExhibitionTitle() {
-            return exhibitionTitle;
-        }
-        public void setExhibitionTitle(String exhibitionTitle) {
-            this.exhibitionTitle = exhibitionTitle;
-        }
-        public int getTotalBookings() {
-            return totalBookings;
-        }
-        public void setTotalBookings(int totalBookings) {
-            this.totalBookings = totalBookings;
-        }
-    }
-
-    // DTO for Example 3: User Booking Details
-    public static class UserBookingDetails {
-        private String username;
-        private String fullName;
-        private String exhibitionTitle;
-        private LocalDate bookingDate;
-        private LocalTime bookingTime;
-
-        // Getters and Setters
-        public String getUsername() {
-            return username;
-        }
-        public void setUsername(String username) {
-            this.username = username;
-        }
-        public String getFullName() {
-            return fullName;
-        }
-        public void setFullName(String fullName) {
-            this.fullName = fullName;
-        }
-        public String getExhibitionTitle() {
-            return exhibitionTitle;
-        }
-        public void setExhibitionTitle(String exhibitionTitle) {
-            this.exhibitionTitle = exhibitionTitle;
-        }
-        public LocalDate getBookingDate() {
-            return bookingDate;
-        }
-        public void setBookingDate(LocalDate bookingDate) {
-            this.bookingDate = bookingDate;
-        }
-        public LocalTime getBookingTime() {
-            return bookingTime;
-        }
-        public void setBookingTime(LocalTime bookingTime) {
-            this.bookingTime = bookingTime;
-        }
-    }
+		try (PreparedStatement ps = dbConn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) {
+				Map<String, Object> record = new HashMap<>();
+				record.put("username", rs.getString("username"));
+				record.put("fullName", rs.getString("fullName"));
+				record.put("exhibitionTitle", rs.getString("exhibitionTitle"));
+				record.put("bookingDate", rs.getDate("bookingDate").toLocalDate());
+				record.put("bookingTime", rs.getTime("bookingTime").toLocalTime());
+				result.add(record);
+			}
+		}
+		return result;
+	}
 }

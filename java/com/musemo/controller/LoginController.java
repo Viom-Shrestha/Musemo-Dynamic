@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
  * authenticate users and set the session and cookies. Also handles login
  * failures.
  * 
- * @author Viom Shrestha
+ *  @author 23048612 Viom Shrestha
  */
 @WebServlet(asyncSupported = true, urlPatterns = { "/login", "/" })
 public class LoginController extends HttpServlet {
@@ -70,7 +70,7 @@ public class LoginController extends HttpServlet {
 			return; // Important: Exit after handling failure
 		} else {
 			SessionUtil.setAttribute(req, "username", username);
-			CookieUtil.addCookie(resp, "role", role, 20 * 60);
+			CookieUtil.addCookie(resp, "role", role, 3 * 60);
 
 			if (role.equalsIgnoreCase("Admin")) {
 				resp.sendRedirect(req.getContextPath() + "/dashboard");

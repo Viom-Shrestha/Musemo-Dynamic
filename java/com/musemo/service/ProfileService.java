@@ -10,7 +10,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Service class for managing user profiles.
+ * Service class for managing user profiles and related data. This includes
+ * retrieving user information, updating profiles, checking for unique user
+ * details, deleting users, and managing admin credentials.
+ * 
+ * @author 23048612 Viom Shrestha
  */
 public class ProfileService {
 
@@ -30,10 +34,11 @@ public class ProfileService {
 	}
 
 	/**
-	 * Retrieves user details based on username.
+	 * Retrieves user details based on the provided username.
 	 *
-	 * @param username the username
-	 * @return UserModel object or null if not found / connection error
+	 * @param username The username of the user to retrieve.
+	 * @return A UserModel object containing the user's details, or null if the user
+	 *         is not found or if there's a connection error.
 	 */
 	public UserModel getUserByUsername(String username) {
 		if (isConnectionError) {
@@ -42,7 +47,6 @@ public class ProfileService {
 		}
 
 		UserModel user = null;
-		// ✅ Include the userImage column in the SELECT query
 		String sql = "SELECT username, fullName, password, gender, email, dateOfBirth, contact, userImage FROM user WHERE username = ?";
 		try (PreparedStatement ps = dbConn.prepareStatement(sql)) {
 			ps.setString(1, username);
@@ -59,7 +63,6 @@ public class ProfileService {
 					user.setDateOfBirth(sqlDate.toLocalDate());
 				}
 				user.setContact(rs.getString("contact"));
-				// ✅ Retrieve the userImage from the ResultSet
 				user.setUserImage(rs.getString("userImage"));
 			}
 		} catch (SQLException e) {
@@ -69,10 +72,10 @@ public class ProfileService {
 	}
 
 	/**
-	 * Retrieves the total number of bookings for the user.
+	 * Retrieves the total number of bookings made by a specific user.
 	 *
-	 * @param username the username
-	 * @return total bookings count
+	 * @param username The username of the user.
+	 * @return The total number of bookings for the user.
 	 */
 	public int getTotalBookings(String username) {
 		if (isConnectionError) {
@@ -95,10 +98,10 @@ public class ProfileService {
 	}
 
 	/**
-	 * Retrieves the number of distinct exhibitions visited by the user.
+	 * Retrieves the number of distinct exhibitions visited by a specific user.
 	 *
-	 * @param username the username
-	 * @return count of exhibitions visited
+	 * @param username The username of the user.
+	 * @return The count of distinct exhibitions visited by the user.
 	 */
 	public int getExhibitionsVisited(String username) {
 		if (isConnectionError) {
@@ -121,9 +124,9 @@ public class ProfileService {
 	}
 
 	/**
-	 * Updates the user profile information.
+	 * Updates the user's profile information in the database.
 	 *
-	 * @param user the updated UserModel object
+	 * @param user The UserModel object containing the updated user information.
 	 */
 	public void updateUser(UserModel user) {
 		if (isConnectionError) {
@@ -166,6 +169,17 @@ public class ProfileService {
 		}
 	}
 
+	/**
+	 * Checks if the provided email or contact number is already registered for
+	 * another user.
+	 *
+	 * @param username The username of the current user (to exclude their own
+	 *                 information).
+	 * @param email    The email address to check.
+	 * @param contact  The contact number to check.
+	 * @return A string message indicating which information is already taken (e.g.,
+	 *         "Email is already registered."), or null if no conflicts are found.
+	 */
 	public String isUserInfoTaken(String username, String email, String contact) {
 		if (dbConn == null) {
 			return "Database connection not available.";
@@ -192,9 +206,15 @@ public class ProfileService {
 			return "Server error occurred. Please try again later.";
 		}
 
-		return null; // No conflicts
+		return null;
 	}
 
+	/**
+	 * Deletes a user from the database based on their username.
+	 *
+	 * @param username The username of the user to delete.
+	 * @return True if the user was successfully deleted, false otherwise.
+	 */
 	public boolean deleteUser(String username) {
 		if (isConnectionError) {
 			System.out.println("Connection Error!");
@@ -211,4 +231,66 @@ public class ProfileService {
 		}
 	}
 
+	/**
+	 * Retrieves the details of the admin user.
+	 *
+	 * @return A UserModel object containing the admin's details, or null if not
+	 *         found.
+	 */
+	public UserModel getAdmin() {
+		String sql = "SELECT username, password, fullName, email, contact FROM user WHERE role='Admin'";
+		try (PreparedStatement ps = dbConn.prepareStatement(sql)) {
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				UserModel admin = new UserModel();
+				admin.setUsername(rs.getString("username"));
+				admin.setPassword(rs.getString("password"));
+				admin.setFullName(rs.getString("fullName"));
+				admin.setEmail(rs.getString("email"));
+				admin.setContact(rs.getString("contact"));
+				return admin;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * Updates the administrative user's credentials.
+	 *
+	 * @param admin The UserModel object containing the updated admin details.
+	 * @return True if the admin credentials were updated successfully, false
+	 *         otherwise.
+	 */
+	public boolean updateAdminCredentials(UserModel admin) {
+		String sql = "UPDATE user SET fullName = ?, username = ?, password = ?, email = ?, contact = ? WHERE role = 'Admin'";
+
+		try (PreparedStatement ps = dbConn.prepareStatement(sql)) {
+			ps.setString(1, admin.getFullName());
+			ps.setString(2, admin.getUsername());
+
+			// Handle password logic
+			if (admin.getPassword() != null && !admin.getPassword().isEmpty()) {
+				ps.setString(3, admin.getPassword()); // Password is assumed to be already encrypted in the controller
+			} else {
+				// Fetch the existing password if not provided
+				UserModel existing = getAdmin();
+				if (existing == null) {
+					System.out.println("Existing admin not found.");
+					return false;
+				}
+				ps.setString(3, existing.getPassword());
+			}
+
+			// Set email and contact fields
+			ps.setString(4, admin.getEmail());
+			ps.setString(5, admin.getContact());
+
+			return ps.executeUpdate() > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

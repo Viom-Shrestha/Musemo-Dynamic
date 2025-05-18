@@ -12,6 +12,8 @@ import com.musemo.util.PasswordUtil;
 /**
  * Service class for handling login operations. Connects to the database,
  * verifies user credentials, and returns login status.
+ * 
+ *  @author 23048612 Viom Shrestha
  */
 public class LoginService {
 

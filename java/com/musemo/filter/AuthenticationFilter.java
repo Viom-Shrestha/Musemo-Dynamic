@@ -1,118 +1,99 @@
 package com.musemo.filter;
 
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
+import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 
 import com.musemo.util.CookieUtil;
-import com.musemo.util.SessionUtil;
 
+/**
+ * Servlet filter responsible for handling user authentication and authorization
+ * for different parts of the web application. It intercepts incoming requests
+ * and checks for the user's role stored in a cookie to determine access
+ * permissions.
+ * 
+ * @author 23048612 Viom Shrestha
+ */
 @WebFilter(asyncSupported = true, urlPatterns = "/*")
 public class AuthenticationFilter implements Filter {
 
-	private static final String LOGIN = "/login";
-	private static final String LOGOUT = "/logout";
-	private static final String REGISTER = "/register";
-	private static final String HOME = "/home";
-	private static final String ROOT = "/";
-	private static final String ABOUT = "/about";
-	private static final String CONTACT = "/contact";
-	private static final String EXHIBITION = "/exhibition";
-	private static final String ARTIFACTS = "/artifact";
-	private static final String EXHIBITIONDETAILS = "/exhibitionDetails";
-	private static final String ARTIFACTDETAILS = "/artifactDetails";
-	private static final String BOOKING = "/booking";
-	private static final String USER_PROFILE = "/profile";
-
-	private static final String DASHBOARD = "/dashboard";
-	private static final String ADMIN_PROFILE = "/adminProfile";
-	private static final String USER_MANAGEMENT = "/userManagement";
-	private static final String ARTIFACT_MANAGEMENT = "/artifactManagement";
-	private static final String EXHIBITION_MANAGEMENT = "/exhibitionManagement";
-
-	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
-		// Initialization logic, if required
-	}
-
+	/**
+	 * This method is invoked for every request that matches the filter's URL
+	 * patterns. It performs authentication and authorization checks.
+	 *
+	 * @param request  The ServletRequest object, cast to HttpServletRequest for
+	 *                 HTTP-specific functionality.
+	 * @param response The ServletResponse object, cast to HttpServletResponse for
+	 *                 HTTP-specific functionality.
+	 * @param chain    The FilterChain object, used to pass the request and response
+	 *                 to the next filter in the chain or the target servlet.
+	 * @throws IOException      If an I/O error occurs during the processing of the
+	 *                          filter.
+	 * @throws ServletException If a servlet-specific error occurs during the
+	 *                          processing of the filter.
+	 */
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
-
 		String uri = req.getRequestURI();
+		String contextPath = req.getContextPath();
+		String path = uri.substring(contextPath.length());
 
-		// Allow access to resources (CSS, images, etc.)
-		if (uri.endsWith(".png") || uri.endsWith(".jpg") || uri.endsWith(".jpeg") || uri.endsWith(".gif")
-				|| uri.endsWith(".css") || uri.endsWith(".js")) {
-			chain.doFilter(request, response);
+		// Skip requests for static resources (images, CSS, JavaScript)
+		if (path.endsWith(".png") || path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".gif")
+				|| path.endsWith(".css") || path.endsWith(".js")) {
+			chain.doFilter(request, response); // Allow access to static resources without authentication
 			return;
 		}
 
-		@SuppressWarnings("unused")
-		boolean isLoggedIn = SessionUtil.getAttribute(req, "username") != null; // Changed to boolean
+		// Retrieve the user's role from the "role" cookie
 		String userRole = CookieUtil.getCookie(req, "role") != null ? CookieUtil.getCookie(req, "role").getValue()
 				: null;
 
-		if ("Admin".equals(userRole)) {
-			// Admin is logged in
-			if (uri.endsWith(LOGIN) || uri.endsWith(REGISTER)) {
-				res.sendRedirect(req.getContextPath() + DASHBOARD);
-				return; // Added return
-			} else if (uri.endsWith(DASHBOARD) || uri.endsWith(ADMIN_PROFILE) || uri.endsWith(USER_MANAGEMENT)
-					|| uri.endsWith(ARTIFACT_MANAGEMENT) || uri.endsWith(HOME) || uri.endsWith(ROOT)
-					|| uri.endsWith(LOGOUT) || uri.endsWith(EXHIBITION_MANAGEMENT)) {
-				// Allow access to all admin pages
-				chain.doFilter(request, response);
-				return; // Added return
-			} else {
-				res.sendRedirect(req.getContextPath() + DASHBOARD);
-				return; // Added return
-			}
-		} else if ("User".equals(userRole)) {
-			// User is logged in
-			if (uri.endsWith(LOGIN) || uri.endsWith(REGISTER)) {
-				res.sendRedirect(req.getContextPath() + HOME);
-				return; // Added return
-			} else if (uri.endsWith(HOME) || uri.endsWith(ROOT) || uri.endsWith(ABOUT) || uri.endsWith(CONTACT)
-					|| uri.endsWith(EXHIBITION) || uri.endsWith(ARTIFACTS) || uri.endsWith(BOOKING)
-					|| uri.endsWith(USER_PROFILE) || uri.endsWith(EXHIBITIONDETAILS) || uri.endsWith(ARTIFACTDETAILS)
-					|| uri.endsWith(LOGOUT)) {
-				chain.doFilter(request, response);
-				return; // Added return
-			} else if (uri.startsWith("/admin")) {
-				res.sendRedirect(req.getContextPath() + HOME);
-				return; // Added return
-			} else {
-				res.sendRedirect(req.getContextPath() + HOME);
-				return; // Added return
-			}
-		} else {
-			// Not logged in
-			if (uri.endsWith(LOGIN) || uri.endsWith(REGISTER) || uri.endsWith(HOME) || uri.endsWith(ROOT)
-					|| uri.endsWith(ABOUT) || uri.endsWith(CONTACT) || uri.endsWith(EXHIBITION)
-					|| uri.endsWith(ARTIFACTS) || uri.endsWith(EXHIBITIONDETAILS) || uri.endsWith(ARTIFACTDETAILS)) {
-				chain.doFilter(request, response);
-				return; // Added return
-			} else {
-				res.sendRedirect(req.getContextPath() + LOGIN);
-				return; // Added return
-			}
+		// Define public routes that do not require authentication
+		if (path.equals("/login") || path.equals("/register") || path.equals("/home") || path.equals("/")
+				|| path.equals("/about") || path.equals("/contact") || path.equals("/exhibition")
+				|| path.equals("/artifact") || path.equals("/exhibitionDetails") || path.equals("/artifactDetails")) {
+			chain.doFilter(request, response); // Allow access to public routes
+			return;
 		}
-	}
 
-	@Override
-	public void destroy() {
-		// Cleanup logic, if required
+		// Authorization for Admin role
+		if ("Admin".equals(userRole)) {
+			// Allow access to admin-specific paths
+			if (path.equals("/dashboard") || path.equals("/adminProfile") || path.equals("/userManagement")
+					|| path.equals("/artifactManagement") || path.equals("/exhibitionManagement")
+					|| path.equals("/logout")) {
+				chain.doFilter(request, response); // Allow admin access
+			} else {
+				// Redirect unauthorized admin requests to the dashboard
+				res.sendRedirect(contextPath + "/dashboard");
+			}
+			return;
+		}
+
+		// Authorization for User role
+		if ("User".equals(userRole)) {
+			// Allow access to user-specific paths
+			if (path.equals("/booking") || path.equals("/profile") || path.equals("/logout")) {
+				chain.doFilter(request, response); // Allow user access
+			} else if (path.startsWith("/admin")) {
+				// Redirect users trying to access admin areas to the home page
+				res.sendRedirect(contextPath + "/home");
+			} else {
+				// Redirect other unauthorized user requests to the home page
+				res.sendRedirect(contextPath + "/home");
+			}
+			return;
+		}
+
+		// If no role is found in the cookie, consider the user unauthenticated and
+		// redirect to the login page
+		res.sendRedirect(contextPath + "/login");
 	}
 }
